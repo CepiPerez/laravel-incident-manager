@@ -1,0 +1,162 @@
+@extends('layouts.main')
+
+@section('content')
+
+
+<div class="container pb-3">
+
+    <div class="row">
+      <h3 class="col pt-2">@lang('main.modules.edit_title')</h3>
+    </div>
+    <hr class="mb-3 mt-0">
+
+    <div class="editor">
+
+      <form action="{{ route('modules.update', $module->id) }}" method="post" autocomplete="off">
+        @csrf
+        @method('put')
+  
+        <div class="form-group">
+          <label for="description">@lang('main.common.description')</label>
+          <input class="form-control" id="description" name="description" value="{{ $module->description }}"></input>
+        </div>
+        
+        
+        <div class="form-group">
+          <label for="formControlRange" id="texto_priority">{{ __('main.common.priority') }}: {{ $module->points }}</label>
+          <input type="range" id="priority" class="form-control-range" name="priority" 
+            min="0" max="100" step="5" value="{{ $module->points }}">
+        </div>
+
+        <div class="form-group">
+          <label for="active">@lang('main.common.status')</label>
+          <select id="active" name="active" class="form-control">
+              <option value=1 @selected($module->active==1)>@lang('main.common.active')</option>
+              <option value=0 @selected($module->active==0)>@lang('main.common.inactive')</option>
+          </select>
+        </div>
+
+        <h5 class="pt-2">@lang('main.problems.title')</h5>
+        <hr class="mb-3 mt-0">
+        <div id="listado" class="bg-slate p-3 mb-0">
+
+          @if (count($module->problems)>0)
+  
+            @foreach ($module->problems as $con)
+              <div class="card slate">
+                <span style="padding: .5rem 1rem;">{{$con->description}}</span>
+                <span class="borrar_condicion fa fa-trash"></span>
+                <input type="hidden" name="modules[]" value="{{$con->id}}">
+              </div>
+            @endforeach
+
+          @endif
+          <p id="vacio" hidden>@lang('main.modules.no_problems')</p>
+
+        </div>
+
+
+        <div class="form-group mt-4">
+          <label for="role">@lang('main.modules.add_module')</label>
+          <div class="row mr-0">
+            <select id="role" class="form-control col ml-3 mr-1">
+              @foreach ($problems as $mod)
+                <option value="{{$mod->id}}">{{$mod->description}}</option>
+              @endforeach
+            </select>
+            <span class="btn btn-sm btn-outline-slate col-auto ml-2 mb-1" id="add">@lang('main.common.add')</span>
+          </div>
+        </div>
+
+        <button type="submit" class="col-auto btn btn-outline-slate mt-2">@lang('main.common.save_changes')</button>
+  
+      </form>
+
+    </div>
+
+    
+</div>
+
+@endsection
+
+
+
+@push('scripts')
+
+<script>
+
+  var slider = document.getElementById("priority");
+  var output = document.getElementById("texto_priority");
+
+  slider.oninput = function() {
+    output.innerHTML = '@lang('main.common.priority')' + ': ' + this.value;
+  }
+
+  $('#add').on('click', function ()
+  {
+    var exists = false;
+
+    $("input[name='modules[]']").each(function() {
+      if ($('#role').val() == $(this).val())
+        exists = true;
+    })
+
+    if (exists) return;
+
+    var padre = document.createElement('div');
+    padre.classList.add("card");
+    padre.classList.add("slate");
+
+    var cont = document.createElement('div');
+    cont.classList.add("d-flex");
+    cont.setAttribute("style", "padding: 0 1rem;");
+
+    var val1 = document.createElement('span');
+    val1.setAttribute("style", "padding: .5rem 1rem;");
+    val1.innerHTML = $('#role option:selected').text();
+
+    var del = document.createElement('span');
+    del.classList.add("borrar_condicion");
+    del.classList.add("fa");
+    del.classList.add("fa-trash");
+
+    var input = document.createElement('input');
+    input.setAttribute("type", "hidden");
+    input.setAttribute("name", "modules[]");
+    input.setAttribute("value", $('#role').val());
+
+    padre.appendChild(val1);
+    padre.appendChild(del);
+    padre.appendChild(input);
+
+    document.getElementById("listado").appendChild(padre);
+
+    checkEmpty();
+
+  
+  });
+
+  $('body').on('click', '.borrar_condicion', function (event) {
+    event.target.parentNode.remove();
+    checkEmpty();
+  });
+
+  function checkEmpty() {
+    if (document.getElementById("listado").childElementCount==1)
+    {
+      $("#vacio").removeAttr("hidden");
+    }
+    else
+    {
+      $("#vacio").attr("hidden", true);
+    }
+  }
+
+  $(document).ready(function(e)
+  {
+    checkEmpty();
+  });
+
+</script>
+
+@endpush

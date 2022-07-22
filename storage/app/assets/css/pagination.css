@@ -1,0 +1,37 @@
+.page-link {
+  padding: .35rem .75rem;
+}
+
+.page-item.active .page-link {
+  background-color: lightslategray;
+  border-color: lightslategray;
+}
+
+html.dark .page-item.active .page-link {
+  background-color: darkslategray;
+  border-color: darkslategray;
+}
+
+html.dark .page-item.disabled .page-link {
+  background-color: transparent;
+  border-color: var(--dark2);
+}
+
+.page-link {
+  color: darkslategray;
+  background-color: transparent;
+  border-color: rgb(191, 209, 226);
+}
+html.dark .page-link {
+  border-color: var(--dark2);
+  color: lightslategray;
+}
+
+.page-link:hover {
+  color: darkslategray;
+}
+html.dark .page-link:hover {
+  background-color: var(--dark2);
+
+  color: 
+}

@@ -1,0 +1,18 @@
+@extends('layouts.main')
+
+
+@section('content')
+    
+    <link href="{{ asset('assets/css/pagination.css') }}" rel="stylesheet">
+    
+    @livewire('incidents-table')
+
+@endsection
+
+
+
+@push('scripts')
+
+    <script src="{{ asset('assets/js/buscador-bootstrap.js') }}"></script>
+
+@endpush
