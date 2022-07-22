@@ -66,7 +66,7 @@ class StartupSeeder extends Seeder
         $role2 = Role::create(['description' => 'External user', 'type' => 0]);
             $role2->permissions()->sync([1, 3, 6]);
 
-        Sla::create(['sla_default' => 24, 'sla_notify' => 4]);
+        Sla::create(['sla_default' => 48, 'sla_notify' => 8]);
 
         ProgressType::create(['id' => 1, 'description' => 'take', 'creator_visible' => 1, 'creator_email' => 0, 'internal_email' => 0]);
         ProgressType::create(['id' => 2, 'description' => 'derivation', 'creator_visible' => 1, 'creator_email' => 0, 'internal_email' => 0]);

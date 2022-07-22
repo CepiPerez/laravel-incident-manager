@@ -17,8 +17,5 @@ class GroupTableSeeder extends Seeder
     {
         DB::table('groups')->insert(['description' => 'Tech support']);
         DB::table('groups')->insert(['description' => 'Field support']);
-        DB::table('groups')->insert(['description' => 'Human resources']);
-        DB::table('groups')->insert(['description' => 'Marketing']);
-        DB::table('groups')->insert(['description' => 'Sales']);
     }
 }

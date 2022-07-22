@@ -33,7 +33,7 @@ class UserTableSeeder extends Seeder
     {
         $groups = Group::pluck('id');        
 
-        User::factory()->count(100)->create()
+        User::factory()->count(50)->create()
             ->each(function($user) use ($groups) {
                 if ($user->type==1) {
                     $user->groups()->attach($this->faker->randomElement($groups));

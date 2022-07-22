@@ -23,7 +23,7 @@ class IncidentFactory extends Factory
         $user = User::find($creator);
         $internal_users = User::where('type', 1)->pluck('id');
         $client_id = $user->type==1? $this->faker->randomNumber(1, 5) : $user->client_id;
-        $assigned = $this->faker->boolean(80) ? $this->faker->randomElement($internal_users) : null;
+        $assigned = $this->faker->boolean(90) ? $this->faker->randomElement($internal_users) : null;
         $group = $assigned ? User::find($assigned)->groups->first()->id : null;
 
         return [
@@ -37,10 +37,11 @@ class IncidentFactory extends Factory
             'problem_id' => $problem,
             'assigned' =>  $assigned,
             'group_id' => $assigned ? $group : null,
-            'status_id' => $assigned? 1 : 0,
+            'status_id' => $assigned? 
+                ($this->faker->boolean(95) ? $this->faker->randomElement([1, 5, 10, 20]) : 50) : 0,
             'priority' => $this->faker->randomElement([10, 20, 30, 50, 80, 100, 110, 120]),
             'sla' => $this->faker->randomElement([12, 24]),
-            'created_at' => $this->faker->dateTimeBetween('-30 days', now())
+            'created_at' => $this->faker->dateTimeBetween('-2 days', now())
         ];
     }
 }

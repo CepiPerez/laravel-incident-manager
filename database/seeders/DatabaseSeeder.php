@@ -23,10 +23,11 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             StartupSeeder::class,
-            /* ClientTableSeeder::class,
+            TestStartSeeded::class,
+            ClientTableSeeder::class,
             GroupTableSeeder::class,
             UserTableSeeder::class,
-            IncidentTableSeeder::class, */
+            IncidentTableSeeder::class,
         ]);
     }
 }
