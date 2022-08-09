@@ -554,6 +554,11 @@ html.dark .form-control:focus {
   position: relative;
   top: -2px;
 }
+.editor .profilepic.small {
+  height: 18px;
+  width: 18px;
+  margin-top: 2px;
+}
 .editor .priority, .referencias .priority {
   height: 16px;
   width: 16px;
@@ -574,6 +579,13 @@ html.dark .form-control:focus {
 }
 html.dark .bg-slate {
   background-color: var(--dark2);
+}
+
+.text-primary {
+  color: darkslategray !important;
+}
+html.dark .text-primary {
+  color: var(--dark-link) !important;
 }
 
 .counter {
@@ -644,14 +656,15 @@ html.dark .incident-attachment {
   height: 71px;
   width: 120px;
   text-align: center;
-  padding: 46px 1rem 0 1rem;
+  padding: 48px 1rem 0 1rem;
   font-size: .75rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(108, 117, 125, 0.9);
   color: white !important;
   opacity: 0;
+  transition: .3s ease;
 }
 .incident-attachment-text:hover {
   opacity: 1;
@@ -661,12 +674,14 @@ html.dark .incident-attachment {
 .btn.attachment {
   height: 71px;
   width: 120px;
+  min-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: .75rem;
   padding: 5px 10px;
   margin-right: .35rem;
+  position: relative;
 }
 .btn.attachment a {
   font-size: .75rem;
@@ -681,6 +696,83 @@ html.dark .btn.attachment {
 .btn.attachment.img {
   position: relative;
   padding:0;
+}
+
+.btn-plain {
+  border: none;
+  padding: 0 .25rem;
+  margin: 0;
+}
+.btn-plain:hover {
+  border: none;
+  background: none;
+}
+.btn-plain.danger {
+  color: red;
+}
+html.dark .btn-plain.danger {
+  color: #ff4646;
+}
+.btn-plain.danger:hover {
+  color: #db0000;
+}
+html.dark .btn-plain.danger:hover {
+  color: #fd7171;
+}
+.btn-plain.success {
+  color: #28a745;
+}
+html.dark .btn-plain.success {
+  color: #28a745;
+}
+.btn-plain.success:hover {
+  color: #218838;
+}
+html.dark .btn-plain.success:hover {
+  color: #35c957;
+}
+.btn-plain.orange {
+  color: var(--orange);
+}
+.btn-plain.orange:hover {
+  color: #e97211;
+}
+html.dark .btn-plain.orange:hover {
+  color: #fc9540;
+}
+.btn-plain.slate {
+  color: darkslategray;
+}
+.btn-plain.slate:hover {
+  color: #223a3a;
+}
+html.dark .btn-plain.slate {
+  color: var(--dark-link-h);
+}
+html.dark .btn-plain.slate:hover {
+  color: var(--link)
+}
+
+
+.attachment .fa-trash {
+  position:absolute;
+  top:7px;
+  right:9px;
+  color:white;
+  opacity: .5;
+  cursor: pointer;
+}
+.attachment .fa-trash:hover {
+  opacity: 1;
+  transition: .3s ease;
+}
+
+.attachemnts-card {
+  background-color: #f4f4f4;
+  padding: 1rem;
+}
+html.dark .attachemnts-card {
+  background-color: var(--dark2);
 }
 
 
@@ -756,6 +848,10 @@ input[type="range"]::-ms-fill-upper {
   }
   .btn-sm {
     padding: 0 .75rem .15rem;
+    line-height: 1.6rem;
+  }
+  .btn-plain {
+    padding: 0 .25rem .15rem;
     line-height: 1.6rem;
   }
 }

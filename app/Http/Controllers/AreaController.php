@@ -7,8 +7,9 @@ use App\Models\Module;
 use Illuminate\Http\Request;
 
 
-class AreasController extends Controller
+class AreaController extends Controller
 {
+	
 	public function index()
 	{
 
@@ -19,21 +20,6 @@ class AreasController extends Controller
 		->paginate(20);
 
 		return view('admin.areas', compact('areas'));
-	}
-
-	public function destroy($id)
-	{
-		$area = Area::find($id);
-		
-		if ($area->delete())
-		{
-			$area->modules()->sync([]);
-			return back()->with('message', __('main.common.deleted'));
-		}
-		else
-		{
-			return back()->with('error', __('main.common.error_deleting'));
-		}
 	}
 
 	public function create()
@@ -113,6 +99,21 @@ class AreasController extends Controller
 		else
 		{
 			return back()->with('error', __('main.common.error_updating'));
+		}
+	}
+
+	public function destroy($id)
+	{
+		$area = Area::find($id);
+		
+		if ($area->delete())
+		{
+			$area->modules()->sync([]);
+			return back()->with('message', __('main.common.deleted'));
+		}
+		else
+		{
+			return back()->with('error', __('main.common.error_deleting'));
 		}
 	}
 

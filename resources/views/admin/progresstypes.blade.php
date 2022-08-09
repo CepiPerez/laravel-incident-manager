@@ -25,7 +25,7 @@
             <td>{{$tipo->id}}</td>
             <td>{{ trans_fb('main.pro_types.'.$tipo->description) }}</td>
             <td class="text-right no-pointer" style="word-spacing:.5rem;"> 
-                <a href="{{ route('progresstypes.edit', $tipo->id) }}" class="fa fa-edit"></a>
+                <a href="{{ route('progresstypes.edit', $tipo->id) }}" class="ri-lg ri-edit-line"></a>
             </td>
           </tr>
           @endforeach

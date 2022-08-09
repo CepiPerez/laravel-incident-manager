@@ -6,7 +6,7 @@ use App\Models\TemporaryFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class UploadsController extends Controller
+class AttachmentController extends Controller
 {
     public function store(Request $request)
     {
@@ -44,4 +44,11 @@ class UploadsController extends Controller
     {
         return Storage::deleteDirectory(dirname(request()->filename));
     }
+
+    public function download($incident_id, $progress_id, $attachment)
+	{
+		return Storage::response("attachments/$incident_id/$progress_id/$attachment");
+		//return Storage::download("attachments/$incident_id/$progress_id/$attachment");
+	}
+
 }

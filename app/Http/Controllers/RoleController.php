@@ -6,8 +6,9 @@ use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
 
-class RolesController extends Controller
+class RoleController extends Controller
 {
+	
 	public function index()
 	{
 		$roles = Role::selectRaw('roles.*, COALESCE(i.cnt,0) AS counter')
@@ -17,20 +18,6 @@ class RolesController extends Controller
 		->paginate(20);
 
 		return view('admin.roles', compact('roles'));
-	}
-
-	public function destroy($id)
-	{
-		$res = Role::find($id);
-
-		if ($res->delete())
-		{
-			return back()->with('message', __('main.common.deleted'));
-		}
-		else
-		{
-			return back()->with('error', __('main.common.error_deleting'));
-		}
 	}
 
 	public function create()
@@ -94,6 +81,20 @@ class RolesController extends Controller
 			return back()->with('error', __('main.common.error_updating'));
 		}
 
+	}
+
+	public function destroy($id)
+	{
+		$res = Role::find($id);
+
+		if ($res->delete())
+		{
+			return back()->with('message', __('main.common.deleted'));
+		}
+		else
+		{
+			return back()->with('error', __('main.common.error_deleting'));
+		}
 	}
 
 	private function upadtePermissions($role, $request)

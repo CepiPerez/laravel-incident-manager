@@ -12,7 +12,7 @@
 
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link href="{{ asset('assets/remixicon/remixicon.css') }}" rel="stylesheet">
 
     @stack('css')
     
@@ -54,9 +54,9 @@
 
         <div class="d-flex" style="margin:0; padding:0; top:-1rem;">
 
-          <span class="nav-btn theme-toggle" style="padding:.45rem.75rem;margin-right:1rem;width:34px;height:34px;" id="theme-toggle">
-            <svg id="theme-toggle-light-icon" class="themebtn" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-            <svg id="theme-toggle-dark-icon" class="themebtn alt" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+          <span class="nav-btn theme-toggle" style="padding:.45rem .65rem;margin-right:1rem;width:34px;height:34px;" id="theme-toggle">
+            <i class="ri-lg ri-sun-line" style="line-height:21px;font-size:15px;vertical-align:middle;" id="theme-toggle-light-icon" hidden></i>
+            <i class="ri-lg ri-moon-line" style="line-height:21px;font-size:15px;vertical-align:middle;" id="theme-toggle-dark-icon" hidden></i>
           </span>
   
           @if ( Route::has('login') )
@@ -104,23 +104,20 @@
           <nav class="sidebar col-auto" {{--  id="navbar" --}}>
             <div class="list-group">
   
-              <a href="#main-submenu" hidden id="main-link" data-toggle="collapse" aria-expanded="false" class="expandable">@lang('main.sidebar.menu')</a>
-              <a href="#admin-submenu" hidden id="admin-link" data-toggle="collapse" aria-expanded="false" class="expandable">@lang('main.sidebar.admin')</a>
 
-              <div class="sidebar-header @if(Request::route()->getPrefix()==null) expanded @endif" id="main-header">
-                <span class="ml-0" style="font-weight:700;">@lang('main.sidebar.menu')</span>
-                <i class="fa @if(Request::route()->getPrefix()==null) fa-chevron-up @else fa-chevron-down @endif text-right"></i>
-              </div>
-  
-              <ul class="collapse @if(!Request::route()->getPrefix()=='/admin') show @endif list-unstyled mt-2" id="main-submenu">
+              <ul class="list-unstyled mt-3" id="main-submenu">
   
                 <li class="sidebaritem @if(Route::currentRouteName()=='incidents.index' || Route::currentRouteName()=='incidents.edit') active @endif">
-                    <a href="{{ route('incidents.index') }}">@lang('main.sidebar.incidents')</a>
+                    <a href="{{ route('incidents.index') }}">
+                      <i class="ri-chat-4-line"></i><span>@lang('main.sidebar.incidents')</span>
+                    </a>
                 </li>
   
                 @can('crear_inc')
                 <li class="sidebaritem @if(Route::currentRouteName()=='incidents.create') active @endif">
-                    <a href="{{ route('incidents.create') }}">@lang('main.sidebar.new_incident')</a>
+                    <a href="{{ route('incidents.create') }}">
+                      <i class="ri-chat-new-line"></i><span>@lang('main.sidebar.new_incident')</span>
+                    </a>
                 </li>
                 @endcan
   
@@ -132,78 +129,95 @@
   
                 @can('tablero_control')
                 <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'dashboard')) active @endif">
-                    <a href="{{ route('dashboard.index') }}">@lang('main.sidebar.dashboard')</a>
+                    <a href="{{ route('dashboard.index') }}">
+                      <i class="ri-dashboard-3-line"></i><span>@lang('main.sidebar.dashboard')</span>
+                    </a>
                 </li>
                 @endcan
   
                 @can('informes')
                 <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'reports')) active @endif">
-                    <a href="{{ route('reports.index') }}">@lang('main.sidebar.reports')</a>
+                    <a href="{{ route('reports.index') }}">
+                      <i class="ri-bar-chart-box-line"></i><span>@lang('main.sidebar.reports')</span>
+                    </a>
                 </li>
                 @endcan
               
               </ul>
   
               @can ('admin_panel')
-              <div class="sidebar-header @if(Request::route()->getPrefix()=='/admin') expanded @endif" id="admin-header">
-                <span class="ml-0" style="font-weight:700;">@lang('main.sidebar.admin')</span>
-                <i class="fa @if(Request::route()->getPrefix()=='/admin') fa-chevron-up @else fa-chevron-down @endif text-right"></i>
-              </div>
               
-  
-              <ul class="collapse @if(Request::route()->getPrefix()=='/admin') show @endif list-unstyled mt-2" id="admin-submenu">
+              <ul class="list-unstyled mt-2" id="admin-submenu">
   
                 @can ('admin_usuarios')
                 <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'users')) active @endif">
-                    <a href="{{ route('users.index') }}">@lang('main.sidebar.users')</a>
+                    <a href="{{ route('users.index') }}">
+                      <i class="ri-user-line"></i><span>@lang('main.sidebar.users')</span>
+                    </a>
                 </li>
                 @endcan
   
                 @can ('admin_usuarios')
                 <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'groups')) active @endif">
-                    <a href="{{ route('groups.index') }}">@lang('main.sidebar.groups')</a>
+                    <a href="{{ route('groups.index') }}">
+                      <i class="ri-group-line"></i><span>@lang('main.sidebar.groups')</span>
+                    </a>
                 </li>
                 @endcan
   
                 @can ('admin_roles')              
                 <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'roles')) active @endif">
-                  <a href="{{ route('roles.index') }}">@lang('main.sidebar.roles')</a>
+                  <a href="{{ route('roles.index') }}">
+                    <i class="ri-door-lock-box-line"></i><span>@lang('main.sidebar.roles')</span>
+                  </a>
                 </li>
                 @endcan
                 
                 @can ('admin_clientes')              
                 <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'clients')) active @endif">
-                    <a href="{{ route('clients.index') }}">@lang('main.sidebar.clients')</a>
+                    <a href="{{ route('clients.index') }}">
+                      <i class="ri-account-box-line"></i><span>@lang('main.sidebar.clients')</span>
+                    </a>
                 </li>
                 @endcan
                 
                 @can ('admin_areas')              
                 <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'areas')) active @endif">
-                    <a href="{{ route('areas.index') }}">@lang('main.sidebar.areas')</a>
+                    <a href="{{ route('areas.index') }}">
+                      <i class="ri-aspect-ratio-line"></i><span>@lang('main.sidebar.areas')</span>
+                    </a>
                 </li>
                 @endcan
                 
                 @can ('admin_modulos')              
                 <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'modules')) active @endif">
-                    <a href="{{ route('modules.index') }}">@lang('main.sidebar.modules')</a>
+                    <a href="{{ route('modules.index') }}">
+                      <i class="ri-picture-in-picture-line"></i><span>@lang('main.sidebar.modules')</span>
+                    </a>
                 </li>
                 @endcan
                 
                 @can ('admin_tipoincidente')              
                 <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'problems')) active @endif">
-                    <a href="{{ route('problems.index') }}">@lang('main.sidebar.problems')</a>
+                    <a href="{{ route('problems.index') }}">
+                      <i class="ri-settings-6-line"></i><span>@lang('main.sidebar.problems')</span>
+                    </a>
                 </li>
                 @endcan
                 
                 @can ('admin_tiposervicio')              
                 <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'servicetypes')) active @endif">
-                    <a href="{{ route('servicetypes.index') }}">@lang('main.sidebar.service_types')</a>
+                    <a href="{{ route('servicetypes.index') }}">
+                      <i class="ri-settings-line"></i><span>@lang('main.sidebar.service_types')</span>
+                    </a>
                 </li>
                 @endcan
                 
                 @can ('admin_tipoavance')              
                 <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'progresstypes')) active @endif">
-                    <a href="{{ route('progresstypes.index') }}">@lang('main.sidebar.progress_types')</a>
+                    <a href="{{ route('progresstypes.index') }}">
+                      <i class="ri-share-forward-box-line"></i><span>@lang('main.sidebar.progress_types')</span>
+                    </a>
                 </li>
                 @endcan
   
@@ -214,20 +228,26 @@
                 @endif --}}
   
                 @if (Auth::user()->role_id==1)              
-                <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'priorities')) active @endif">
-                    <a href="{{ route('priorities.index') }}">@lang('main.sidebar.priorities')</a>
+                <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'priorit')) active @endif">
+                    <a href="{{ route('priorities.index') }}">
+                      <i class="ri-arrow-up-circle-line"></i><span>@lang('main.sidebar.priorities')</span>
+                    </a>
                 </li>
                 @endif
   
                 @if (Auth::user()->role_id==1)              
                 <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'sla')) active @endif">
-                    <a href="{{ route('sla.index') }}">@lang('main.sidebar.sla')</a>
+                    <a href="{{ route('sla.index') }}">
+                      <i class="ri-time-line"></i><span>@lang('main.sidebar.sla')</span>
+                    </a>
                 </li>
                 @endif
   
                 @if (Auth::user()->role_id==1)              
                 <li class="sidebaritem @if(Str::contains(Route::currentRouteName(),'assignation')) active @endif">
-                    <a href="{{ route('assignation.index') }}">@lang('main.sidebar.assignation')</a>
+                    <a href="{{ route('assignation.index') }}">
+                      <i class="ri-user-received-line"></i><span>@lang('main.sidebar.assignation')</span>
+                    </a>
                 </li>
                 @endif
   
@@ -237,6 +257,11 @@
   
             </div>
           </nav>
+
+          <div class="expand">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width="16" height="16"><path fill="none" d="M0 0h24v24H0z"/><path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"/></svg>
+          </div>
+  
 
           <!-- Contenido principal -->
           <div class="col main-content">
@@ -330,80 +355,80 @@
       });
 
       function changeIconTheme()
-      {
-        if (currentTheme == 'dark') {
-          document.documentElement.classList.add('dark');
-          themeToggleDarkIcon.classList.remove('visible');
-          themeToggleLightIcon.classList.add('visible');
-        } else {
-          document.documentElement.classList.remove('dark');
-          themeToggleDarkIcon.classList.add('visible');
-          themeToggleLightIcon.classList.remove('visible');
-        }
-      }
+    {
+      //console.log("THEME: "+currentTheme);
 
+      if (currentTheme == 'dark') {
+        document.documentElement.classList.add('dark');
+        themeToggleDarkIcon.setAttribute('hidden', true);
+        themeToggleLightIcon.removeAttribute('hidden');
+      } else {
+        document.documentElement.classList.remove('dark');
+        themeToggleLightIcon.setAttribute('hidden', true);
+        themeToggleDarkIcon.removeAttribute('hidden');
+      }
+    }
+
+      function setLoaded() {
+        $('#maincontent').addClass('loaded');
+        //$('#background').addClass('loaded');
+      }
 
       $(document).ready(function () {
 
         changeIconTheme();
 
-          $('.toast').toast('show')
+        $('.toast').toast('show')
 
-          $('#main-header').on('click', function () {
-            if ($('#admin-submenu').hasClass('show'))
+
+        $('.dismiss').on('click', function () {
+            if ($('.sidebar').hasClass("active"))
             {
-              $('#main-header').addClass('expanded')
-              $('#admin-header').removeClass('expanded')
-              $('#main-header > i').removeClass('fa-chevron-down')
-              $('#main-header > i').addClass('fa-chevron-up')
-              $('#admin-header > i').removeClass('fa-chevron-up')
-              $('#admin-header > i').addClass('fa-chevron-down')
-              $('#main-link').trigger('click')
-              $('#admin-link').trigger('click')
+                $('.sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
             }
-          });
-
-          $('#admin-header').on('click', function () {
-            if ($('#main-submenu').hasClass('show'))
+            else
             {
-              $('#admin-header').addClass('expanded')
-              $('#main-header').removeClass('expanded')
-              $('#admin-header > i').removeClass('fa-chevron-down')
-              $('#admin-header > i').addClass('fa-chevron-up')
-              $('#main-header > i').removeClass('fa-chevron-up')
-              $('#main-header > i').addClass('fa-chevron-down')
-              $('#main-link').trigger('click')
-              $('#admin-link').trigger('click')
+                $('.sidebar').addClass('active');
+                $('.overlay').addClass('active');
             }
-          });
+        });
 
-          $('.dismiss').on('click', function () {
-              if ($('.sidebar').hasClass("active"))
-              {
-                  $('.sidebar').removeClass('active');
-                  $('.overlay').removeClass('active');
-              }
-              else
-              {
-                  $('.sidebar').addClass('active');
-                  $('.overlay').addClass('active');
-              }
-          });
+        $('.overlay').on('click', function () {
+            $('.sidebar').removeClass('active');
+            $('.overlay').removeClass('active');
+        });
 
-          $('.overlay').on('click', function () {
-              $('.sidebar').removeClass('active');
-              $('.overlay').removeClass('active');
-          });
+        $('#perfil').on('click', function () {
+          javascript:window.location.href='{{ route("user.profile", Auth::user()->id) }}';
+        });
 
-          $('#perfil').on('click', function () {
-            javascript:window.location.href='{{ route("user.profile", Auth::user()->id) }}';
-          });
+        $('#salir').on('click', function () {
+          javascript:window.location.href='{{ route("logout") }}';
+        });
 
-          $('#salir').on('click', function () {
-            javascript:window.location.href='{{ route("logout") }}';
-          });
+        $('.expand').on('click', function () {
+          if ($('.sidebar').hasClass("collapsed"))
+          {
+            $('.sidebar').removeClass('collapsed');
+            $('.background').removeClass('collapsed');
+            localStorage.setItem('sidebar', 'expanded');
+          }
+          else
+          {
+            $('.sidebar').addClass('collapsed');
+            $('.background').addClass('collapsed');
+            localStorage.setItem('sidebar', 'collapsed');
+          }
+        });
 
-          $('#maincontent').addClass('loaded');
+
+        if (localStorage.getItem('sidebar') === 'collapsed') {
+          $('.sidebar').addClass('collapsed');
+          $('.background').addClass('collapsed');
+        }
+
+        setTimeout(setLoaded, 600);
 
       });
 

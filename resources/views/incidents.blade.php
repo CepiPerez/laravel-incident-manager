@@ -11,13 +11,15 @@
         <div class="col-auto botonera pr-0 pl-3">
 
             @if ($unassigned>0 && (!isset($filters['status_id']) || $filters['status_id']!=0) && Auth::user()->type==1)
-                <a href="#" onclick="getUnassigned()" class="col-auto btn btn-outline-danger btn-sm mt-0 mb-0 mr-2">
-                    @lang('main.incidents.unassigned_exists')</a>
+                <a href="#" onclick="getUnassigned()" class="col-auto btn btn-plain danger btn-sm ml-2 mt-3 mb-0 mr-3">
+                    <i class="ri-error-warning-line mr-1 m-0 p-0" style="vertical-align:middle;"></i>
+                    @lang('main.incidents.unassigned_exists')
+                </a>
             @endif
                 
             @can('crear_inc')
-                <a href="{{ route('incidents.create') }}" 
-                    class="col-auto btn btn-outline-success btn-sm ml-2 mt-2 mb-2 pl-3 pr-3">
+                <a href="{{ route('incidents.create') }}" class="col-auto btn btn-plain slate btn-sm ml-2 mt-3 mb-0">
+                    <i class="ri-add-line mr-1 m-0 p-0" style="vertical-align:middle;"></i>
                     @lang('main.incidents.new')
                 </a>
             @endcan
@@ -47,7 +49,7 @@
     </div>
 
 
-    @if (count($data)>0)
+    @if (count($incidents)>0)
 
         <table class="table ticketera">
             <thead>
@@ -73,7 +75,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($data as $value)
+            @foreach ($incidents as $value)
                 <tr>
                     <td class="pl-1">
                         <a href="{{ route('incidents.edit', $value->id) }}">
@@ -142,7 +144,7 @@
     @endif
 
 
-    {{ $data->links() }}
+    {{ $incidents->links() }}
 
 
     <form action="" method="get" id="orderIncidents">

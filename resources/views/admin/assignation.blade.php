@@ -9,8 +9,8 @@
     <div class="row mr-0">
         <h3 class="col-sm pt-2">@lang('main.assignation.title')</h3>
         <div class="col-sm botonera pr-0">
-          <a href="{{ route('assignation.create') }}" class="col-auto btn btn-outline-slate btn-sm ml-2 mt-2 mb-2 pl-3 pr-3">
-            @lang('main.assignation.add_rule')</a>
+          <a href="{{ route('assignation.create') }}" class="col-auto btn btn-plain slate btn-sm ml-2 mt-3 mb-1">
+            <i class="ri-add-line mr-2 m-0 p-0" style="vertical-align:middle;"></i>@lang('main.assignation.add_rule')</a>
         </div>
     </div>
     <hr class="mb-3 mt-0">
@@ -37,9 +37,9 @@
               <td class="d-none d-md-table-cell">{{$tipo->user_name}}</td>
               <td class="d-none d-lg-table-cell text-center">{{$tipo->active==1? __('main.common.active'):__('main.common.inactive')}}</td>
               <td class="text-right no-pointer" style="word-spacing:.5rem;"> 
-                  <a href="{{ route('assignation.edit', $tipo->id) }}" class="fa fa-edit"></a>
+                  <a href="{{ route('assignation.edit', $tipo->id) }}" class="ri-lg ri-edit-line"></a>
 
-                  <a href="#" class="fa fa-trash" 
+                  <a href="#" class="ri-lg ri-delete-bin-7-line" 
                       onclick="window.confirm('@lang('main.assignation.delete_question')')?
                       (document.getElementById('form-delete').setAttribute('action','{{ route('assignation.destroy', $tipo->id) }}') &
                       document.getElementById('form-delete').submit()):''"

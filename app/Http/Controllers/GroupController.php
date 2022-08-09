@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use Illuminate\Http\Request;
 
-class GroupsController extends Controller
+class GroupController extends Controller
 {
     public function index()
 	{
@@ -19,20 +19,6 @@ class GroupsController extends Controller
 			
 
 		return view('admin.groups', compact('groups'));
-	}
-
-	public function destroy($id)
-	{
-		$group = Group::find($id);
-
-		if ($group->delete())
-		{
-			return back()->with('message', __('main.common.deleted'));
-		}
-		else
-		{
-			return back()->with('error', __('main.common.error_deleting'));
-		}
 	}
 
 	public function create()
@@ -104,4 +90,19 @@ class GroupsController extends Controller
 		}
 
 	}
+
+	public function destroy($id)
+	{
+		$group = Group::find($id);
+
+		if ($group->delete())
+		{
+			return back()->with('message', __('main.common.deleted'));
+		}
+		else
+		{
+			return back()->with('error', __('main.common.error_deleting'));
+		}
+	}
+
 }

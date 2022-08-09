@@ -6,7 +6,7 @@ use App\Models\PriorityRule;
 use App\Models\PriorityRuleCondition;
 use Illuminate\Http\Request;
 
-class PriorityRulesController extends Controller
+class PriorityRuleController extends Controller
 {
     public function create()
 	{
@@ -15,8 +15,6 @@ class PriorityRulesController extends Controller
 
 	public function store(Request $request)
 	{
-		//dd($request->all()); exit();
-
 		$request->validate([
 			'description' => 'required|max:150',
 			'conditions' => 'required'

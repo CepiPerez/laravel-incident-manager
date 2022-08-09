@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\ServiceType;
 use Illuminate\Http\Request;
 
-class ServiceTypesController extends Controller
+class ServiceTypeController extends Controller
 {
+
 	public function index()
 	{
 		$service_types = ServiceType::selectRaw('service_types.*, COALESCE(i.cnt,0) AS counter')
@@ -16,20 +17,6 @@ class ServiceTypesController extends Controller
 		->paginate(20);
 
 		return view('admin.servicetypes', compact('service_types'));
-	}
-
-	public function eliminarServiceType($id)
-	{
-		$res = ServiceType::find($id);
-
-		if ($res->delete())
-		{
-			return back()->with('message', __('main.common.deleted'));
-		}
-		else
-		{
-			return back()->with('error', __('main.common.error_deleting'));
-		}
 	}
 
 	public function create()
@@ -81,6 +68,20 @@ class ServiceTypesController extends Controller
 		else
 		{
 			return back()->with('error', __('main.common.error_updating'));
+		}
+	}
+
+	public function destroy($id)
+	{
+		$res = ServiceType::find($id);
+
+		if ($res->delete())
+		{
+			return back()->with('message', __('main.common.deleted'));
+		}
+		else
+		{
+			return back()->with('error', __('main.common.error_deleting'));
 		}
 	}
 

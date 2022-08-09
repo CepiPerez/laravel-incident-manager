@@ -7,14 +7,11 @@ use App\Models\Client;
 use App\Models\ServiceType;
 use Illuminate\Http\Request;
 
-class ClientsController extends Controller
+class ClientController extends Controller
 {
 
 	public function index()
 	{
-		//dd(Client::with('service')->first()->toArray());
-
-
 		$clients = Client::selectRaw('clients.*, service_types.description as service, COALESCE(i.cnt,0) AS counter')
 		->joinSub('SELECT client_id, count(client_id) cnt FROM incidents GROUP BY client_id', 'i',
 			'i.client_id', '=', 'clients.id', 'LEFT')
@@ -23,20 +20,6 @@ class ClientsController extends Controller
 		->paginate(20);
 
 		return view('admin.clients', compact('clients'));
-	}
-
-	public function destroy($id)
-	{
-		$res = Client::find($id);
-
-		if ($res->delete())
-		{
-			return back()->with('message', __('main.common.deleted'));
-		}
-		else
-		{
-			return back()->with('error', __('main.common.error_deleting'));
-		}
 	}
 
 	public function create()
@@ -120,13 +103,19 @@ class ClientsController extends Controller
 
 	}
 
-	/* public function habilitarCliente($id)
+	public function destroy($id)
 	{
-		$cliente = Cliente::find($id);
-		$cliente->activo = $cliente->activo? 0 : 1;
-		$cliente->save();
+		$res = Client::find($id);
 
-		return response($cliente);
-	} */
+		if ($res->delete())
+		{
+			return back()->with('message', __('main.common.deleted'));
+		}
+		else
+		{
+			return back()->with('error', __('main.common.error_deleting'));
+		}
+	}
+
 
 }

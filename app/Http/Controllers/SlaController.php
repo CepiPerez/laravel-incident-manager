@@ -38,43 +38,4 @@ class SlaController extends Controller
 
     }
 
-    public static function getRuleValue($rule, $inc)
-	{
-		foreach ($rule->conditions as $cond)
-		{
-			if ($cond->condition == 'service_types')
-            {
-                if (Client::find($inc['client_id'])->service_type_id != $cond->value)
-                    return null;
-            }
-
-			if ($cond->condition == 'clients')
-            {
-                if ($inc['client_id']!=$cond->value)
-                    return null;
-            }
-
-            if ($cond->condition == 'areas')
-            {
-                if ($inc['area_id']!=$cond->value)
-                    return null;
-            }
-
-            if ($cond->condition == 'modules')
-            {
-                if ($inc['module_id']!=$cond->value)
-                    return null;
-            }
-
-            if ($cond->condition == 'problems')
-            {
-                if ($inc['problem_id']!=$cond->value)
-                    return null;
-            }
-
-        }
-
-		return $rule->sla;
-	}
-
 }

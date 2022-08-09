@@ -571,34 +571,37 @@ html.dark .table tbody td i:not(.badge, :hover) {
 .table tbody td .fa-eye:hover {
   color: var(--primary);
 }
-.table tbody td .fa-edit:hover {
+.table tbody td .ri-edit-line:hover {
   color: var(--primary);
 }
-html.dark .table tbody td .fa-edit:hover {
+html.dark .table tbody td .ri-edit-line:hover {
   color: var(--dark-link);
 }
-.table tbody td .fa-lock:hover {
+.table tbody td .ri-lock-line:hover {
   color: var(--orange) !important;
 }
-.table tbody td .fa-unlock:hover {
+.table tbody td .ri-lock-unlock-line:hover {
   color: var(--green);
 }
-.table tbody td .fa-trash:hover {
+.table tbody td .ri-delete-bin-7-line:hover {
   color: var(--red);
 }
-.table tbody td .fa-trash.disabled {
+.table tbody td .ri-delete-bin-7-line.disabled {
   color: lightgray;
 }
-.table tbody td .fa-trash.disabled:hover {
+.table tbody td .ri-delete-bin-7-line.disabled:hover {
   color: lightgray;
   cursor: default;
 }
-html.dark .table tbody td .fa-trash.disabled {
-  color: var(--dark2);
+html.dark .table tbody td .ri-delete-bin-7-line.disabled {
+  color: var(--dark-text-dim);
 }
-html.dark .table tbody td .fa-trash.disabled:hover {
-  color: var(--dark2);
+html.dark .table tbody td .ri-delete-bin-7-line.disabled:hover {
+  color: var(--dark-text-dim);
   cursor: default;
+}
+.table tbody td .ri-lock-line, .table tbody td .ri-lock-unlock-line {
+  cursor: pointer;
 }
 
 .card a {

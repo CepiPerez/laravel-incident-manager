@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
-use App\Models\Group;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +10,7 @@ use Illuminate\Http\Request;
 
 class UserProfileController extends Controller
 {
+
 	public function edit($id)
 	{
 		if (Auth::user()->id != $id) abort(403);
@@ -24,8 +22,6 @@ class UserProfileController extends Controller
 
 	public function update(Request $request, $id)
 	{
-		//dd($request->all());
-
 		if (Auth::user()->id != $id) abort(403);
 
 		$request->validate([

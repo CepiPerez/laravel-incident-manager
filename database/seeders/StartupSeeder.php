@@ -39,7 +39,7 @@ class StartupSeeder extends Seeder
             'role_id'   => 1,
             'client_id' => 0
         ]);
-        $admin->groups()->attach([1, 2, 3 ,4, 5]);
+        $admin->groups()->attach([1, 2]);
 
         Permission::create(['description' => 'incidents_create']);
         Permission::create(['description' => 'incidents_all']);

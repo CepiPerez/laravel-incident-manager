@@ -7,8 +7,9 @@ use App\Models\ProgressType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class ProgressTypesController extends Controller
+class ProgressTypeController extends Controller
 {
+	
 	public function index()
 	{
 		$progress_types = ProgressType::orderBy('description')->paginate(20);
@@ -20,9 +21,8 @@ class ProgressTypesController extends Controller
 	{
 		$progress_type = ProgressType::find($id);
 
-		//dd(Storage::get('public/templates_correo/tipo_avance_'.(int)$id.'.html'));
-
 		$template = null;
+
 		if (Storage::exists('public/templates_correo/progress_type_'.$id.'.html'))
 			$template = Storage::get('public/templates_correo/progress_type_'.$id.'.html');
 
@@ -50,6 +50,5 @@ class ProgressTypesController extends Controller
 			return back()->with('error', 'Hubo un error al guardar los cambios');
 		}
 	}
-
 
 }

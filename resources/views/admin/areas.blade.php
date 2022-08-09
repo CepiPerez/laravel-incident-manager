@@ -9,8 +9,8 @@
     <div class="row mr-0">
         <h3 class="col-sm pt-2">@lang('main.areas.title')</h3>
         <div class="col-sm botonera pr-0">
-          <a href="{{ route('areas.create') }}" class="col-auto btn btn-outline-slate btn-sm ml-2 mt-2 mb-2 pl-3 pr-3">
-            @lang('main.areas.add_area')</a>
+          <a href="{{ route('areas.create') }}" class="col-auto btn btn-plain slate btn-sm ml-2 mt-3 mb-1">
+            <i class="ri-add-line mr-2 m-0 p-0" style="vertical-align:middle;"></i>@lang('main.areas.add_area')</a>
         </div>
     </div>
     <hr class="mb-3 mt-0">
@@ -31,9 +31,9 @@
             <td>{{$area->description}}</td>
             <td class="d-none d-md-table-cell text-center">{{$area->points}}</td>
             <td class="text-right no-pointer" style="word-spacing:.5rem;"> 
-                <a href="{{ route('areas.edit', $area->id) }}" class="fa fa-edit"></a>
+                <a href="{{ route('areas.edit', $area->id) }}" class="ri-lg ri-edit-line"></a>
 
-                <a href="#" class="fa fa-trash @if($area->counter>0) disabled @endif" 
+                <a href="#" class="ri-lg ri-delete-bin-7-line @if($area->counter>0) disabled @endif" 
                   @if($area->counter==0)
                     onclick="window.confirm('@lang('main.areas.delete_question')')?
                     (document.getElementById('form-delete').setAttribute('action','{{ route('areas.destroy', $area->id) }}') &

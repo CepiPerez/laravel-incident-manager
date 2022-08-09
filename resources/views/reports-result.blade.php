@@ -8,7 +8,8 @@
     <div class="row mr-0">
         <h3 class="col-sm pt-2">@lang('main.reports.title')</h3>
         <div class="col-sm botonera pr-0">
-          <a href="{{ route('reports.download') }}" class="col-auto btn btn-outline-slate btn-sm ml-2 mt-2 mb-2 pl-3 pr-3">
+          <a href="{{ route('reports.download') }}" class="col-auto btn btn-plain success btn-sm ml-2 mt-3 mb-1">
+            <i class="ri-download-cloud-line mr-2 m-0 p-0" style="vertical-align:middle;"></i>
             @lang('main.reports.download')</a>
         </div>
     </div>

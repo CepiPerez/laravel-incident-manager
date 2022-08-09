@@ -8,8 +8,8 @@
     <div class="row mr-0">
         <h3 class="col-sm pt-2">@lang('main.clients.title')</h3>
         <div class="col-sm botonera pr-0">
-          <a href="{{ route('clients.create') }}" class="col-auto btn btn-outline-slate btn-sm ml-2 mt-2 mb-2 pl-3 pr-3">
-            @lang('main.clients.add_client')</a>
+          <a href="{{ route('clients.create') }}" class="col-auto btn btn-plain slate btn-sm ml-2 mt-3 mb-1">
+            <i class="ri-add-line mr-2 m-0 p-0" style="vertical-align:middle;"></i>@lang('main.clients.add_client')</a>
         </div>
     </div>
     <hr class="mb-3 mt-0">
@@ -32,12 +32,12 @@
             <td class="d-none d-lg-table-cell">{{$cli->service}}</td>
             <td class="d-none d-md-table-cell">{{$cli->active==1? __('main.common.active'):__('main.common.inactive')}}</td>
             <td class="text-right no-pointer" style="word-spacing:.5rem;"> 
-                <a href="{{ route('clients.edit', $cli->id) }}" class="fa fa-edit"></a>
+                <a href="{{ route('clients.edit', $cli->id) }}" class="ri-lg ri-edit-line"></a>
 
                 {{-- <i onclick="habilitarCliente('{{ route('clientes.habilitar', $cli->id) }}')" 
                 class="fa @if($cli->activo==1) fa-lock @else fa-unlock @endif"></i> --}}
 
-                <a href="#" class="fa fa-trash @if($cli->counter>0) disabled @endif" 
+                <a href="#" class="ri-lg ri-delete-bin-7-line @if($cli->counter>0) disabled @endif" 
                   @if($cli->counter==0)
                     onclick="window.confirm('@lang('main.clients.delete_question')')?
                     (document.getElementById('form-delete').setAttribute('action','{{ route('clients.destroy', $cli->id) }}') &

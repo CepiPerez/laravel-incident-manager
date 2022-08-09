@@ -8,8 +8,8 @@
     <div class="row mr-0">
         <h3 class="col-sm pt-2">@lang('main.users.title')</h3>
         <div class="col-sm botonera pr-0">
-          <a href="{{ route('users.create') }}" class="col-auto btn btn-outline-slate btn-sm ml-2 mt-2 mb-2 pl-3 pr-3">
-            @lang('main.users.add_user')</a>
+          <a href="{{ route('users.create') }}" class="col-auto btn btn-plain slate btn-sm ml-2 mt-3 mb-1">
+            <i class="ri-add-line mr-2 m-0 p-0" style="vertical-align:middle;"></i>@lang('main.users.add_user')</a>
         </div>
     </div>
     <hr class="mb-3 mt-0">
@@ -36,9 +36,9 @@
             <td class="d-none d-md-table-cell">{{$user->role->description}}</td>
             {{-- <td class="d-none d-lg-table-cell">{{$user->client->description}}</td> --}}
             <td class="text-right no-pointer" style="word-spacing:.5rem;"> 
-                <a href="{{ route('users.edit', $user->id) }}" class="fa fa-edit"></a>
+                <a href="{{ route('users.edit', $user->id) }}" class="ri-lg ri-edit-line"></a>
 
-                <a href="#" class="fa fa-trash @if($user->counter>0) disabled @endif" 
+                <a href="#" class="ri-lg ri-delete-bin-7-line @if($user->counter>0) disabled @endif" 
                   @if($user->counter==0)
                     onclick="window.confirm('@lang('main.users.delete_question')')?
                     (document.getElementById('form-delete').setAttribute('action','{{ route('users.destroy', $user->id) }}') &

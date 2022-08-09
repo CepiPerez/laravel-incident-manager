@@ -29,7 +29,7 @@
     
         <h5 class="pt-2">@lang('main.modules.title')</h5>
         <hr class="mb-3 mt-0">
-        <div id="listado" class="bg-slate p-3 pb-2">
+        <div id="listado" class="bg-slate p-3">
           <p id="vacio">No hay módulos</p>
         </div>
 
@@ -89,10 +89,10 @@
     val1.setAttribute("style", "padding: .5rem 1rem;");
     val1.innerHTML = $('#role option:selected').text();
 
-    var del = document.createElement('span');
+    var del = document.createElement('i');
     del.classList.add("borrar_condicion");
-    del.classList.add("fa");
-    del.classList.add("fa-trash");
+    del.classList.add("ri-lg");
+    del.classList.add("ri-delete-bin-7-line");
 
     var input = document.createElement('input');
     input.setAttribute("type", "hidden");

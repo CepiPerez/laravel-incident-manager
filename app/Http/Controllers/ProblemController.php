@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Problem;
 use Illuminate\Http\Request;
 
-class ProblemsController extends Controller
+class ProblemController extends Controller
 {
 	public function index()
 	{
@@ -17,20 +17,6 @@ class ProblemsController extends Controller
 		->paginate(20);
 
 		return view('admin.problems', compact('problems'));
-	}
-
-	public function destroy($id)
-	{
-		$res = Problem::find($id);
-
-		if ($res->delete())
-		{
-			return back()->with('message', __('main.common.deleted'));
-		}
-		else
-		{
-			return back()->with('error', __('main.common.error_deleting'));
-		}
 	}
 
 	public function create()
@@ -85,5 +71,18 @@ class ProblemsController extends Controller
 		}
 	}
 
+	public function destroy($id)
+	{
+		$res = Problem::find($id);
+
+		if ($res->delete())
+		{
+			return back()->with('message', __('main.common.deleted'));
+		}
+		else
+		{
+			return back()->with('error', __('main.common.error_deleting'));
+		}
+	}
 
 }

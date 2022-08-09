@@ -126,10 +126,17 @@
       </div>
 
       <div class="form-group">
-        <label>@lang('main.incidents.attachments')</label><br>
-        <div {{-- class="custom-file" --}}>
-            <input type="file" {{-- class="custom-file-input" id="customFileLang" --}} name="archivo[]" multiple id="archivo">
-            {{-- <label class="custom-file-label" data-browse="Seleccionar" for="customFileLang">@lang('main.incidents.att_select')</label> --}}
+        <label>@lang('main.incidents.attachments')</label>
+        {{-- <div>
+          <input type="file" name="archivo[]" multiple id="archivo">
+        </div> --}}
+        <div class="attachemnts-card">
+          <button class="btn btn-sm btn-outline-slate upload-btn" type="button">Agregar archivo</button>
+          {{-- <form action="/upload" method="post" id="uploadform"> --}}
+            <input name="archivo[]" type="file" class="file d-none" multiple 
+            accept=".csv, .xls, .xlsx, .doc, .docx, .png, .jpeg, .jpg, .txt, .zip, .rar, .csv, .pdf"/>
+          {{-- </form> --}}
+          <div class="image-container"></div>
         </div>
       </div>
 
@@ -168,6 +175,7 @@
 <link href="{{ asset('assets/css/select2.min.css') }}" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/newdatetimepicker.css') }}">
 <link href="{{ asset('assets/css/filepond.css') }}" rel="stylesheet" />
+<link href="{{ asset('assets/css/imageupload.css') }}" rel="stylesheet" />
 
 @endpush
 
@@ -177,9 +185,10 @@
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/js/newdatetimepicker.js') }}"></script>
 <script src="{{ asset('assets/js/filepond.js') }}"></script>
+<script src="{{ asset('assets/js/imageupload.js') }}"></script>
 
 
-<script type="module" >
+{{-- <script type="module" >
   @if (Config::get('app.locale')=='es')
   import es_es from '{{ asset('assets/js/filepond_es.js') }}';
   FilePond.setOptions(es_es);
@@ -214,7 +223,7 @@
   });
 
 
-</script>
+</script> --}}
 
 <script>
 

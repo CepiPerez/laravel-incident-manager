@@ -6,7 +6,7 @@ use App\Models\Problem;
 use App\Models\Module;
 use Illuminate\Http\Request;
 
-class ModulesController extends Controller
+class ModuleController extends Controller
 {
 	public function index()
 	{
@@ -17,22 +17,6 @@ class ModulesController extends Controller
 		->paginate(20);
 
 		return view('admin.modules', compact('modules'));
-	}
-
-	public function destroy($id)
-	{
-		$res = Module::find($id);
-
-		if ($res->delete())
-		{
-			$res->problems()->sync([]);
-
-			return back()->with('message', __('main.common.deleted'));
-		}
-		else
-		{
-			return back()->with('error', __('main.common.error_deleting'));
-		}
 	}
 
 	public function create()
@@ -117,5 +101,20 @@ class ModulesController extends Controller
 		}
 	}
 
-	
+	public function destroy($id)
+	{
+		$res = Module::find($id);
+
+		if ($res->delete())
+		{
+			$res->problems()->sync([]);
+
+			return back()->with('message', __('main.common.deleted'));
+		}
+		else
+		{
+			return back()->with('error', __('main.common.error_deleting'));
+		}
+	}
+
 }

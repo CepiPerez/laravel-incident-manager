@@ -6,8 +6,9 @@ use App\Models\SlaRule;
 use App\Models\SlaRuleCondition;
 use Illuminate\Http\Request;
 
-class SlaRulesController extends Controller
+class SlaRuleController extends Controller
 {
+	
     public function create()
 	{
 		return view('admin.slarule-create');
@@ -15,7 +16,6 @@ class SlaRulesController extends Controller
 
 	public function store(Request $request)
 	{
-		//dd($request->all()); exit();
 
 		$request->validate([
 			'description' => 'required|max:150',

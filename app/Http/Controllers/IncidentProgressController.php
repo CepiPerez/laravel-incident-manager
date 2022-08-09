@@ -14,22 +14,32 @@ class IncidentProgressController extends Controller
 
 	public function store(Request $request, $id)
 	{
-		//dd($request->all());
-
 		$inc = Incident::find($id);
+
+		$progress_type = 0;
+		if ($request->progress_type_sub=='progress')
+			$progress_type = (int)$request->progress_type;
+		elseif ($request->progress_type_sub=='note')
+			$progress_type = Auth::user()->type==0? 30 : 100;
+		elseif ($request->progress_type_sub=='close')
+			$progress_type = 20;
+		elseif ($request->progress_type_sub=='cancel')
+			$progress_type = 50;
+		elseif ($request->progress_type_sub=='reopen')
+			$progress_type = 6;
 
 		$progress = [];
 		$progress['incident_id'] = $id;
-		$progress['progress_type_id'] = $request->progress_type;
+		$progress['progress_type_id'] = $progress_type;
 		$progress['description'] = $request->description;
 		$progress['user_id'] = Auth::user()->id;
 
-		if ($request->progress_type==1)
+		if ($progress_type==1)
 		{
 			$progress['assigned_to'] = Auth::user()->id;
 			$progress['assigned_group_to'] = Auth::user()->groups->first()->id;
 		}
-		elseif ($request->progress_type==2)
+		elseif ($progress_type==2)
 		{
 			$progress['assigned_to'] = $request->assign_user ?? null;
 			$progress['assigned_group_to'] = $request->assign_group ?? null;
@@ -63,7 +73,7 @@ class IncidentProgressController extends Controller
 			}
 
 			# Taking
-			if ($request->progress_type==1)
+			if ($progress_type==1)
 			{
 				if ($inc->status_id==0)
 					$inc->status_id = 1;
@@ -73,7 +83,7 @@ class IncidentProgressController extends Controller
 			}
 
 			# Derivation
-			elseif ($request->progress_type==2)
+			elseif ($progress_type==2)
 			{
 				# If it's assigned to an user then set status to 'in progress'
 				if ($inc->status_id==0 && $request->assign_user!=0)
@@ -84,23 +94,23 @@ class IncidentProgressController extends Controller
 			}
 				
 			# Paused
-			elseif ($request->progress_type==5)
+			elseif ($progress_type==5)
 				$inc->status_id = 5;
 
 			# Re-open
-			elseif ($request->progress_type==6)
+			elseif ($progress_type==6)
 				$inc->status_id = 1;
 
 			# Resolved
-			elseif ($request->progress_type==10)
+			elseif ($progress_type==10)
 				$inc->status_id = 10;
 
 			# Closed
-			elseif ($request->progress_type==20)
+			elseif ($progress_type==20)
 				$inc->status_id = 20;
 
 			# Canceled
-			elseif ($request->progress_type==50)
+			elseif ($progress_type==50)
 				$inc->status_id = 50;
 
 			$inc->save();
@@ -137,8 +147,6 @@ class IncidentProgressController extends Controller
 
 		$incident->save();
 		
-		/* $adjunto = AdjuntosIncidente::find($avance); */
-		
 		if ($progress->delete())
 		{
 			IncidentAttachment::where('incident_id', $incident_id)->where('progress_id', $progress_id)->delete();
@@ -152,7 +160,5 @@ class IncidentProgressController extends Controller
 		}
 
 	}
-
-
 
 }

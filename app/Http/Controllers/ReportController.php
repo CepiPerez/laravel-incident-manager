@@ -15,6 +15,7 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class ReportController extends Controller
 {
+	
     public function index()
 	{
 		$this->authorize('informes');
@@ -147,9 +148,8 @@ class ReportController extends Controller
 
         $incidents = $incidents->get();
 
-        //dd($incidents->toArray());
 
-        foreach ($incidents as $inc)
+		foreach ($incidents as $inc)
 		{
 			foreach($inc->progress_short as $avance)
 			{
@@ -190,4 +190,5 @@ class ReportController extends Controller
 
 
 	}
+
 }

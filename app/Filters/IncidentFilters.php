@@ -31,6 +31,9 @@ class IncidentFilters
             }
         }
 
+        $filterInstance = new $this->filters['user'];
+        $query = $filterInstance($query, Auth()->user());
+
         return $query;
     }
 

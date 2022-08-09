@@ -17,21 +17,6 @@ class Incident extends Model
         'creator', 'assigned', 'group_id', 'status_id', 'priority', 'created_at', 'updated_at'
     ];
 
-    public static function getIncidentList()
-    {
-        return Incident::with(['creator_user', 'assigned_user'])
-            ->selectRaw('incidents.*, clients.description as client_desc, 
-            incident_states.description as status_desc, priorities.id as pid, 
-            priorities.description as pdesc')
-            ->leftJoin('incident_states', 'incident_states.id', '=', 'status_id')
-            ->leftJoin('clients', 'clients.id', '=', 'client_id')
-            ->leftJoin('priorities', function ($join) {
-                $join->on('incidents.priority', '>=', 'priorities.min');
-                $join->on('incidents.priority', '<=', 'priorities.max');
-            });
-    }
-
-
     public function client()
     {
         return $this->belongsTo(Client::class);
@@ -84,40 +69,6 @@ class Incident extends Model
         return $this->hasMany(IncidentAttachment::class)
             ->where('progress_id', 0);
     }
-
-    /* public function scopeSearch($query, $search)
-    {
-        return $query->where( function($query) use ($search) {
-            return $query->where('incidents.title', 'LIKE', '%'.$search.'%')
-                    ->orWhere('incidents.description', 'LIKE', '%'.$search.'%')
-                   ->orWhere('incidents.id', $search);
-        });
-    } */
-
-    /* public function scopeFilterByUser($query, $user)
-    {
-        if ($user->role_id != 1)
-		{
-			$perms = $user->role->permissions->pluck('id')->toArray();
-			
-			if (in_array(3, $perms))
-				$query = $query->where( function($q) use ($user) {
-					return $q->where('creator', $user->id)
-						->orWhere('assigned', $user->id);
-				});
-			
-			elseif (in_array(4, $perms))
-			{
-				if ($user->type==0)
-					$query = $query->where('client_id', $user->client_id);
-				
-				else
-					$query = $query->whereIn('group_id', $user->groups->pluck('id')->toArray());
-			}
-        }
-
-        return $query;
-    } */
 
     public function scopeFilter($query, $incident_filters, $request_filters)
     {

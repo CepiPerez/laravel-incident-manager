@@ -28,9 +28,7 @@ if (! function_exists('trans_fb'))
     {
         return $value!=__($value) ? __($value) : Str::afterLast($value, '.');
     }
-
 }
-
 
 if (! function_exists('check_img')) 
 {
@@ -43,11 +41,8 @@ if (! function_exists('check_img'))
         $contentType = mime_content_type($value);
         
         return in_array($contentType, $allowedMimeTypes);
-
     }
-
 }
-
 
 if (! function_exists('get_icon_svg')) 
 {
@@ -57,17 +52,20 @@ if (! function_exists('get_icon_svg'))
         $extension = end($array);
         $val = 'txt';
 
-        if (in_array($extension, ['xls', 'xlsx'])) 
-            $val = 'xls';
+        if (in_array($extension, ['xls', 'xlsx', 'csv'])) 
+                $val = 'xls';
 
-        elseif (in_array($extension, ['doc', 'docx', 'odt'])) 
-            $val = 'doc';
-        
-        elseif (in_array($extension, ['mp3', 'wav', 'flac'])) 
-            $val = 'mp3';
+            elseif (in_array($extension, ['doc', 'docx'])) 
+                $val = 'doc';
+            
+            elseif (in_array($extension, ['ppt', 'pptx'])) 
+                $val = 'ppt';
 
-        elseif ($extension=='pdf') 
-            $val = 'pdf';
+            elseif (in_array($extension, ['rar', 'zip'])) 
+                $val = 'zip';
+
+            elseif ($extension=='pdf') 
+                $val = 'pdf';
 
         return asset("assets/icons/$val.svg");
 

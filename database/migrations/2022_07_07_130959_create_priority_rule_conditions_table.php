@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('temporary_files', function (Blueprint $table) {
+        Schema::create('priority_rule_conditions', function (Blueprint $table) {
             $table->id();
-            $table->string('folder');
-            $table->string('filename');
-            $table->timestamps();
+            $table->bigInteger('rule_id');
+            $table->text('condition');
+            $table->text('value');
+            $table->text('helper');
         });
     }
 
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('temporary_files');
+        Schema::dropIfExists('priority_rule_conditions');
     }
 };

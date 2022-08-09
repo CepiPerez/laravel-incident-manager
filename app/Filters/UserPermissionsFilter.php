@@ -11,11 +11,12 @@ class UserPermissionsFilter
 			$perms = $user->role->permissions->pluck('id')->toArray();
 			
 			if (in_array(3, $perms))
+			{
 				$query = $query->where( function($q) use ($user) {
 					return $q->where('creator', $user->id)
 						->orWhere('assigned', $user->id);
 				});
-			
+			}			
 			elseif (in_array(4, $perms))
 			{
 				if ($user->type==0)

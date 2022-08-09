@@ -8,9 +8,10 @@ use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class AssignationsController extends Controller
+class AssignationController extends Controller
 {
-    public function index()
+
+	public function index()
     {
         $this->authorize('isadmin');
 
@@ -137,38 +138,6 @@ class AssignationsController extends Controller
 		{
 			return back()->with('error', __('main.common.error_deleting'));
 		}
-	}
-
-    public static function getRuleValue($rule, $inc)
-	{
-        $found = false;
-
-		foreach ($rule->conditions as $cond)
-		{
-
-			if ($cond->condition == 'clients')
-            {
-                $found = $inc['client_id']==$cond->value;
-            }
-
-            elseif ($cond->condition == 'areas')
-            {
-                $found = $inc['area_id']==$cond->value;
-            }
-
-            elseif ($cond->condition == 'modules')
-            {
-                $found = $inc['module_id']==$cond->value;
-            }
-
-            elseif ($cond->condition == 'problems')
-            {
-                $found = $inc['problem_id']==$cond->value;
-            }
-
-        }
-
-		return $found? [$rule->group_id, $rule->user_id, ($rule->user_id==0? 0 : 1)] : null;
 	}
 
 }

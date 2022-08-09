@@ -10,18 +10,20 @@
         @lang('main.incidents.incident') #{{ sprintf("%'.06d", $incident->id) }}
       </h3>
       @if ($incident->status_id<10 && Auth::user()->type==1)
-      <p class="col-auto text-secondary" style="height:2rem;padding-top:16px;">
-        @php $s = sla_expiration($incident->created_at, $incident->sla); @endphp
-        @if ($s['expired']) 
-          <span class="text-danger"> 
-          <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-        @elseif ($s['hours'] < $sla_notify)
-          <span class="text-orange"> 
-          <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-        @endif
-        {{ $s['text'] }}
-        @if ($s['expired'] || $s['hours'] < $sla_notify) 
-          </span>
+      <p class="col-auto text-secondary" style="height:2rem;padding-top:16px;padding-right:1.25rem;">
+        @if ($sla->sla_default>0)
+          @php $s = sla_expiration($incident->created_at, $incident->sla); @endphp
+          @if ($s['expired']) 
+            <span class="text-danger"> 
+            <i class="ri-error-warning-line" style="vertical-align:middle;" aria-hidden="true"></i>
+          @elseif ($s['hours'] < $sla->sla_notify)
+            <span class="text-orange"> 
+            <i class="ri-error-warning-line" style="vertical-align:middle;" aria-hidden="true"></i>
+          @endif
+          {{ $s['text'] }}
+          @if ($s['expired'] || $s['hours'] < $sla->sla_notify) 
+            </span>
+          @endif
         @endif
       </p>
       @endif
@@ -50,12 +52,12 @@
 
           @if ($incident->attachments->count()>0)
             <label>@lang('main.incidents.attachments')</label>
-            <div class="d-flex mb-3">
+            <div class="d-grid mb-3">
 
               @foreach ($incident->attachments as $att)
 
                 @if ( check_img(Storage::path('attachments/'.$incident->id.'/0/'.$att->attachment)) )
-                  <div class="btn btn-outline-secondary attachment img">
+                  <div class="btn btn-outline-secondary attachment img mb-2">
                     <a href="{{ route('incidents.attachment', [$incident->id, 0, $att->attachment]) }}"
                       target="_blank" style="text-decoration: none;">
                       <img src="{{asset('attachments/'.$incident->id.'/0/'.$att->attachment)}}" alt="" class="incident-attachment">
@@ -65,7 +67,7 @@
                 @else
                   <a href="{{ route('incidents.attachment', [$incident->id, 0, $att->attachment]) }}"
                     target="_blank" style="text-decoration: none;">
-                    <div class="btn btn-outline-secondary attachment">
+                    <div class="btn btn-outline-secondary attachment mb-2">
                       <img src="{{ get_icon_svg($att->attachment) }}" alt="" class="p-1" height=42 width=42><br>
                       {{ $att->attachment }}
                     </div>
@@ -131,70 +133,91 @@
                   @else slate
                   @endif;">
                   <div class="m-0">
-                    <div class="row m-0 pl-2 pr-2 pt-1">
+                    <div class="row m-0 pl-2 pr-2 pt-1"
+                      @if ($value->description ||
+                        $value->attachments ||
+                        (($value->user_id==Auth::user()->id || Auth::user()->role_id==1) && $incident->status->id<20
+                        ))
+                        data-toggle="collapse" href="#collapse_{{$loop->index}}" role="button" aria-expanded="false" aria-controls="collapse_{{$loop->index}}"
+                      @endif
+                      >
                       <div class="col-6 p-0 text-left">
                         <p class="text-strong m-0 mb-2">
                         @if ($value->progress_type_id==2)
                           @lang('main.incidents.assigned_to') {{ $groups[$value->assigned_group_to] ?? '' }}
-                          {{ $value->assigned_to ? ($value->assigned_group_to? '> '.$users[$value->assigned_to]:'') : '' }}
+                          {{ $value->assigned_to ? ($value->assigned_group_to? '> '.$users->where('id', $value->assigned_to)->first()->name:'') : '' }}
                         @else
                           {{ trans_fb('main.pro_types.'.$progress_types->where('id', $value->progress_type_id)->first()->description) }}
                         @endif
                         </p>
                       </div>
-                      <div class="col-6 p-0 text-right text-secondary">
-                        <span class="d-none d-md-inline">
-                          <i class="fa fa-user pr-1" style="font-size:.75rem;position:relative;top:-1px;"></i>
-                          {{ $users[$value->user_id] }} 
+                      <div class="col-6 p-0 text-right">
+                        <span class="d-none d-md-inline text-secondary">
+                          <img src="{{ $users->where('id', $value->user_id)->first()->avatar }}" alt=""
+                               class="profilepic small">
+                          {{ $users->where('id', $value->user_id)->first()->name }} 
                         </span>
-                        <span class="m-0 mb-2 ml-3">
-                          <i class="fa fa-calendar pr-1" style="font-size:.75rem;position:relative;top:-1px;"></i>
+                        <span class="m-0 mb-2 ml-3 text-secondary">
+                          <i class="ri-calendar-line pr-1 text-primary" style="vertical-align:middle;"></i>
                           {{ date('d-m-Y', strtotime($value->created_at)) }}
                         </span>
                       </div>
                     </div>
-                    @if ($value->description)
-                      <div class="row text-small ml-0 mr-2 mb-2">
-                        <p class="pl-2 pr-2 m-0 pt-0 text-secondary">{{ htmlentities($value->description) }}</p>
-                      </div>
-                    @endif
 
-                    @if ($value->attachments)
-                      <div class="d-flex mb-2 ml-2">
-                        @foreach ($value->attachments as $att)
 
-                          @if ( check_img(Storage::path('attachments/'.$incident->id.'/'.$value->id.'/'.$att->attachment)) )
-                            <div class="btn btn-outline-secondary attachment img">
+                    @if ($value->description ||
+                    $value->attachments ||
+                    (($value->user_id==Auth::user()->id || Auth::user()->role_id==1) && $incident->status->id<20
+                    ))
+                    <div class="collapse" id="collapse_{{$loop->index}}">
+                      
+
+                      @if ($value->description)
+                        <div class="row text-small ml-0 mr-2 mb-2">
+                          <p class="pl-2 pr-2 m-0 pt-0 text-secondary">{{ htmlentities($value->description) }}</p>
+                        </div>
+                      @endif
+
+                      @if ($value->attachments)
+                        <div class="d-flex mb-2 ml-2">
+                          @foreach ($value->attachments as $att)
+
+                            @if ( check_img(Storage::path('attachments/'.$incident->id.'/'.$value->id.'/'.$att->attachment)) )
+                              <div class="btn btn-outline-secondary attachment img">
+                                <a href="{{ route('incidents.attachment', [$incident->id, $value->id, $att->attachment]) }}"
+                                  target="_blank" style="text-decoration: none;">
+                                  <img src="{{asset('attachments/'.$value->incident_id.'/'.$value->id.'/'.$att->attachment)}}" alt="" class="incident-attachment">
+                                  <span class="incident-attachment-text">{{$att->attachment}}</span>
+                                </a>
+                              </div>
+                            @else
                               <a href="{{ route('incidents.attachment', [$incident->id, $value->id, $att->attachment]) }}"
                                 target="_blank" style="text-decoration: none;">
-                                <img src="{{asset('attachments/'.$value->incident_id.'/'.$value->id.'/'.$att->attachment)}}" alt="" class="incident-attachment">
-                                <span class="incident-attachment-text">{{$att->attachment}}</span>
+                                <div class="btn btn-outline-secondary attachment">
+                                  <img src="{{ get_icon_svg($att->attachment) }}" alt="" class="p-1" height=42 width=42><br>
+                                  {{ $att->attachment }}
+                                </div>
                               </a>
-                            </div>
-                          @else
-                            <a href="{{ route('incidents.attachment', [$incident->id, $value->id, $att->attachment]) }}"
-                              target="_blank" style="text-decoration: none;">
-                              <div class="btn btn-outline-secondary attachment">
-                                <img src="{{ get_icon_svg($att->attachment) }}" alt="" class="p-1" height=42 width=42><br>
-                                {{ $att->attachment }}
-                              </div>
-                            </a>
-                          @endif      
-                        @endforeach
-                      </div>
-                    @endif
-
-                    @if (($value->user_id==Auth::user()->id || Auth::user()->role_id==1) && $incident->status->id<20)
-                      <div class="col text-right text-small m-0 p-0 mb-2 pr-2 pb-1">
-                        <div class="col-auto text-right p-0 pl-0 m-0 mb-0 text-dark"> 
-                          <a href="#" onclick="eliminarAvance('{{route('incident.progress.destroy', [$incident->id, $value->id]) }}')"
-                            class="btn btn-sm btn-outline-danger m-0 pl-2 pr-2 pt-0">
-                            <i class="fa fa-trash mr-2 m-0 p-0" style="font-size:.75rem;"></i>@lang('main.incidents.att_remove')
-                          </a> 
+                            @endif      
+                          @endforeach
                         </div>
-                      </div>
-                    @endif
-                   
+                      @endif
+
+                      @if (($value->user_id==Auth::user()->id || Auth::user()->role_id==1) && $incident->status->id<20)
+                        <div class="col text-right text-small m-0 p-0 mb-2 pr-2 pb-1">
+                          <div class="col-auto text-right p-0 pl-0 m-0 mb-0 text-dark"> 
+                            <a href="#" onclick="eliminarAvance('{{route('incident.progress.destroy', [$incident->id, $value->id]) }}')"
+                              class="btn btn-sm btn-plain danger m-0 pl-2 pr-2 pt-0 pb-0">
+                              <i class="ri-xl ri-delete-bin-7-line mr-1 m-0 p-0" style="font-size:.9rem;"></i>
+                              @lang('main.incidents.att_remove')
+                            </a> 
+                          </div>
+                        </div>
+                      @endif
+
+                    </div>
+
+                    @endif                   
 
                   </div>
                 </div>
@@ -205,17 +228,17 @@
 
             <div class="botonera p-0 m-0 mt-3">
               @if(Auth::user()->type==1 && $incident->status->id<20)
-                <span class="col-auto btn btn-outline-orange btn-sm mb-1 pt-0 pl-3 pr-3 mr-2" 
-                  data-toggle="modal" data-target="#agregarNota" >
+                <span class="col-auto btn btn-plain btn-sm orange p-0 mr-3" onclick="addPrivateNote()">
+                  <i class="ri-add-line mr-2 m-0 p-0" style="vertical-align:middle;"></i>
                   @lang('main.incidents.add_private_note')
                 </span>
-                <span class="col-auto btn btn-outline-slate btn-sm mb-1 pt-0 pl-3 pr-3" 
-                  data-toggle="modal" data-target="#agregarAvance" >
+                <span class="col-auto btn btn-plain btn-sm p-0 mr-3" onclick="addProgress()">
+                  <i class="ri-add-line mr-2 m-0 p-0" style="vertical-align:middle;"></i>
                   @lang('main.incidents.add_progress')
                 </span>
               @elseif (Auth::user()->type==0 && $incident->status->id<20)
-                <span class="col-auto btn btn-outline-slate btn-sm mb-1 pt-0 pl-3 pr-3" 
-                  data-toggle="modal" data-target="#agregarNota">
+                <span class="col-auto btn btn-plain btn-sm p-0 mr-3" onclick="addUserNote()">
+                  <i class="ri-add-line mr-2 m-0 p-0" style="vertical-align:middle;"></i>
                   @lang('main.incidents.add_note')
                 </span>
               @endif
@@ -311,15 +334,15 @@
             <hr class="mt-5">
             <div class="row m-0">
               @if($incident->status_id==10)
-                <span class="btn btn-outline-slate mb-2" data-toggle="modal" data-target="#reabrirCliente">
+                <span class="btn btn-outline-slate mb-2" onclick="reopenIncident()">
                   @lang('main.incidents.reopen_incident')
                 </span>
               @endif
-              <span class="btn btn-outline-slate mr-2" data-toggle="modal" data-target="#cerrarCliente">
+              <span class="btn btn-outline-slate mr-2" onclick="closeIncident()">
                 @lang('main.incidents.close_incident')
               </span>
               @if($incident->progress->count()==0 && $incident->status_id==0)
-                <span class="btn btn-outline-slate mt-2" data-toggle="modal" data-target="#cancelarCliente">
+                <span class="btn btn-outline-slate mt-2" onclick="cancelIncident()">
                   @lang('main.incidents.cancel_incident')
                 </span>
               @endif
@@ -379,7 +402,7 @@
                 <form action="{{ route('incident.progress.store', $incident->id) }}" method="post" id="guardarAvance" enctype="multipart/form-data">
                   @csrf
 
-                    <div class="form-group">
+                    <div class="form-group" id="selectorAvance">
                     <label for="progress_type">@lang('main.pro_types.title')</label>
                     <select class="form-control" id="progress_type" name="progress_type">
                         @foreach (($incident->status_id==10?
@@ -390,6 +413,8 @@
                         @endforeach
                     </select>
                     </div>  
+
+                    <input type="hidden" id="progress_type_sub" name="progress_type_sub">
 
                     <div class="text-danger mb-4" id="nota_danger" hidden>
                       @lang('main.incidents.caution_msg')
@@ -443,143 +468,6 @@
 
                 </form>
                 <button onclick="guardarAvance()" class="btn btn-outline-slate">@lang('main.common.save')</button>
-            </div>
-        </div>
-      </div>
-    </div>
-    @endif
-
-    <!-- Modal add client note / private note -->
-    <div class="modal fade" id="agregarNota" tabindex="-1" role="dialog" aria-labelledby="agregarNotaLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-white" id="agregarNotaLabel">
-                  @if(Auth::user()->cliente==5) @lang('main.incidents.add_private_note') @else @lang('main.incidents.add_note') @endif
-                </h5>
-            </div>
-            <div class="editor" style="margin:15px;">
-                <form action="{{ route('incident.progress.store', $incident->id) }}" method="post" id="guardarNota" enctype="multipart/form-data">
-                  @csrf
-
-                    <input type="hidden" name="progress_type" value="{{ Auth::user()->type==0? 30 : 100 }}">
-                    
-                    <div class="form-group">
-                      <label for="description">@lang('main.common.description')</label>
-                      <textarea type="text" name="description_note" id="d_nota" class="form-control @error('description_note') is-invalid @enderror"
-                        rows="3"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                      <label>@lang('main.incidents.attachment')</label><br>
-                      <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFileLang2" name="archivo">
-                        <label class="custom-file-label" data-browse="Seleccionar" for="customFileLang2">@lang('main.incidents.att_select')</label>
-                      </div>
-                    </div>
-
-                </form>
-                <button onclick="guardarNota()" class="btn btn-outline-slate">@lang('main.common.save')</button>
-            </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal client reopening -->
-    <div class="modal fade" id="reabrirCliente" tabindex="-1" role="dialog" aria-labelledby="agregarNotaLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-white" id="agregarNotaLabel">
-                  @lang('main.incidents.reopening_title')
-                </h5>
-            </div>
-            <div class="editor" style="margin:15px;">
-                <form action="{{ route('incident.progress.store', $incident->id) }}" method="post" id="reabrirIncidente" enctype="multipart/form-data">
-                  @csrf
-
-                    <input type="hidden" name="progress_type" value="6">
-
-                    
-                    <div class="form-group">
-                      <label for="description">@lang('main.common.description')</label>
-                      <textarea type="text" name="description" id="d_nota" class="form-control @error('description') is-invalid @enderror"
-                        rows="3"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                      <label>@lang('main.incidents.attachment')</label><br>
-                      <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFileLang3" name="archivo">
-                        <label class="custom-file-label" data-browse="Seleccionar" for="customFileLang3">@lang('main.incidents.att_select')</label>
-                      </div>
-                    </div>
-
-                </form>
-                <button onclick="reabrirIncidente()" class="btn btn-outline-slate">@lang('main.incidents.reopen_confirm')</button>
-            </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal close incident by client -->
-    @if (Auth::user()->type==0)
-    <div class="modal fade" id="cerrarCliente" tabindex="-1" role="dialog" aria-labelledby="cierreClienteLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-white" id="cierreClienteLabel">@lang('main.incidents.close_incident')</h5>
-            </div>
-            <div class="editor" style="margin:15px;">
-                <form action="{{ route('incident.progress.store', $incident->id) }}" method="post" id="cierreCliente">
-                  @csrf
-
-                  <input type="hidden" name="progress_type" value="20">
-
-                  <div class="text-danger mb-4" id="nota_danger">
-                    @lang('main.incidents.caution_msg_close')
-                  </div>
-                  
-                  <div class="form-group">
-                    <label for="description">@lang('main.incidents.optional_message')</label>
-                    <textarea type="text" name="description" class="form-control @error('description') is-invalid @enderror"
-                      rows="3"></textarea>
-                  </div>
-
-                </form>
-                <button onclick="cierreCliente()" class="btn btn-outline-slate">@lang('main.incidents.close_confirm')</button>
-            </div>
-        </div>
-      </div>
-    </div>
-    @endif
-
-    <!-- Modal incident cancel by client -->
-    @if (Auth::user()->type==0)
-     <div class="modal fade" id="cancelarCliente" tabindex="-1" role="dialog" aria-labelledby="cancelClienteLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-danger">
-                <h5 class="modal-title text-white" id="cancelClienteLabel">@lang('main.incidents.cancel_incident')</h5>
-            </div>
-            <div class="editor" style="margin:15px;">
-                <form action="{{ route('incident.progress.store', $incident->id) }}" method="post" id="cancelCliente">
-                  @csrf
-
-                  <input type="hidden" name="progress_type" value="50">
-
-                  <div class="text-danger mb-4" id="nota_danger">
-                    @lang('main.incidents.caution_msg_cancel')
-                  </div>
-                  
-                  <div class="form-group">
-                    <label for="description">@lang('main.incidents.optional_message')</label>
-                    <textarea type="text" name="description" class="form-control @error('description') is-invalid @enderror"
-                      rows="3"></textarea>
-                  </div>
-
-                </form>
-                <button onclick="cancelCliente()" class="btn btn-outline-danger">@lang('main.incidents.cancel_confirm')</button>
             </div>
         </div>
       </div>
@@ -656,6 +544,70 @@
   $('#assign_group').select2();
   $('#assign_user').select2();
 
+  function addProgress() {
+    $('#agregarAvanceLabel').text('{{__('main.incidents.add_progress')}}');
+    $('.modal-header').removeClass('bg-danger');
+    $('.modal-header').removeClass('bg-warning');
+    $('#selectorAvance').attr('hidden', false);
+    $('#progress_type').val($("#progress_type option:first").val()).change();
+    $('#progress_type_sub').val('progress');
+    $('#agregarAvance').modal('toggle');
+  }
+
+  function addPrivateNote() {
+    $('#agregarAvanceLabel').text('{{__('main.incidents.add_private_note')}}');
+    $('.modal-header').removeClass('bg-danger');
+    $('.modal-header').addClass('bg-warning');
+    $('#selectorAvance').attr('hidden', true);
+    $('#progress_type_sub').val('note');
+    $('#progress_type').val('100').change();
+    $('#agregarAvance').modal('toggle');
+  }
+
+  function addUserNote() {
+    $('#agregarAvanceLabel').text('{{__('main.incidents.add_note')}}');
+    $('.modal-header').removeClass('bg-danger');
+    $('.modal-header').removeClass('bg-warning');
+    $('#selectorAvance').attr('hidden', true);
+    $('#progress_type_sub').val('note');
+    $('#progress_type').val('30').change();
+    $('#agregarAvance').modal('toggle');
+  }
+
+  function cancelIncident() {
+    $('#agregarAvanceLabel').text('{{__('main.incidents.cancel_incident')}}');
+    $('.modal-header').removeClass('bg-warning');
+    $('.modal-header').addClass('bg-danger');
+    $('#selectorAvance').attr('hidden', true);
+    $('#nota_danger').attr('hidden', false);
+    $('#nota_danger').text('ATENCION: Una vez cerrado el incidente, el mismo ya no podrá ser modificado.');
+    $('#progress_type_sub').val('cancel');
+    $('#progress_type').val('50').change();
+    $('#agregarAvance').modal('toggle');
+  }
+
+  function closeIncident() {
+    $('#agregarAvanceLabel').text('{{__('main.incidents.close_incident')}}');
+    $('.modal-header').removeClass('bg-warning');
+    $('.modal-header').addClass('bg-danger');
+    $('#selectorAvance').attr('hidden', true);
+    $('#nota_danger').attr('hidden', false);
+    $('#nota_danger').text('ATENCION: Una vez cerrado el incidente, el mismo ya no podrá ser modificado.');
+    $('#progress_type_sub').val('close');
+    $('#progress_type').val('20').change();
+    $('#agregarAvance').modal('toggle');
+  }
+
+  function reopenIncident() {
+    $('#agregarAvanceLabel').text('{{__('main.incidents.reopen_incident')}}');
+    $('.modal-header').removeClass('bg-warning');
+    $('.modal-header').removeClass('bg-danger');
+    $('#selectorAvance').attr('hidden', true);
+    $('#nota_danger').attr('hidden', true);
+    $('#progress_type_sub').val('reopen');
+    $('#progress_type').val('6').change();
+    $('#agregarAvance').modal('toggle');
+  }
 
   $('#customFileLang').on('change',function() {
       var fileName = $(this).val();
@@ -690,7 +642,7 @@
   })
 
   $('#agregarAvance').on('shown.bs.modal', function () {
-        $('#tipo_avance').trigger('focus')
+        $('#progress_type').trigger('focus')
   })
 
   $('#agregarNota').on('shown.bs.modal', function () {

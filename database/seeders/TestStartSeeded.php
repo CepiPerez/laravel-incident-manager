@@ -47,8 +47,5 @@ class TestStartSeeded extends Seeder
         ServiceType::create(['description' => 'Basic', 'points' => 10]);
         ServiceType::create(['description' => 'Premium', 'points' => 20]);
 
-        $g = Group::create(['description' => 'Tech support']);
-        $g = Group::create(['description' => 'Field support']);
-
     }
 }

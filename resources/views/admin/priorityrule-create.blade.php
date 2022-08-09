@@ -28,8 +28,9 @@
           <p id="vacio">@lang('main.priorities.no_conditions')</p>
 
           <div class="botonera p-0 m-0 mt-3">
-            <span class="col-auto btn btn-outline-slate btn-sm mb-1 pt-0 pl-3 pr-3" 
+            <span class="col-auto btn btn-plain btn-sm slate mb-1 p-0 mr-2" 
               data-toggle="modal" data-target="#agregarCondicion" id="btn_agregar">
+              <i class="ri-add-line mr-2 m-0 p-0" style="vertical-align:middle;"></i>
               @lang('main.priorities.add_condition')
             </span>
           </div>
@@ -220,10 +221,10 @@
 
     padre.appendChild(cont);
 
-    var del = document.createElement('span');
+    var del = document.createElement('i');
     del.classList.add("borrar_condicion");
-    del.classList.add("fa");
-    del.classList.add("fa-trash");
+    del.classList.add("ri-lg");
+    del.classList.add("ri-delete-bin-7-line");
 
     padre.appendChild(del);
 

@@ -1,14 +1,12 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
-use App\Models\Client;
 use App\Models\Priority;
 use App\Models\PriorityRule;
 use Illuminate\Http\Request;
 
-class PrioritiesController extends Controller
+class PriorityController extends Controller
 {
 	public function index()
 	{
@@ -48,29 +46,6 @@ class PrioritiesController extends Controller
 		{
 			return back()->with('error', __('main.common.error_updating'));
 		}
-	}
-
-	public static function getRulePoints($rule, $inc)
-	{
-		foreach ($rule->conditions as $cond)
-		{
-			if ($cond->condition == 'clients')
-            {
-				//dump("CLIENT: " . $cond->value . "::" . $rule->points);
-                if ($inc['client_id']!=$cond->value)
-                    return null;
-            }
-
-            if ($cond->condition == 'ext_users')
-            {
-				//dump("USER: " . $cond->value . "::" . $rule->points);
-                if ($inc['creator']!=$cond->value)
-                    return null;
-            }
-
-        }
-		//dump($rule->points);
-		return $rule->points;
 	}
 
 }

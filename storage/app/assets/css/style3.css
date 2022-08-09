@@ -6,6 +6,7 @@
     /* z-index: 2; */
     position: relative;
     width: 200px;
+    /* min-width: 200px; */
     padding: 0;
     margin: 0;    
     left: 0;
@@ -54,9 +55,10 @@ main {
 }
 
 .main-content .container {
-    padding: 0;
+    padding: 0 1rem;
     margin-top: .5rem;
     min-height: calc(100vh - 3.9rem);
+    min-width: 100%;
 }
 
 .botonera {
@@ -97,8 +99,8 @@ main {
         z-index: 9;
         position: fixed;
         top: 0;
-        left: -230px;
-        width: 230px;
+        left: -260px;
+        width: 260px !important;
         /* overflow: hidden; */
         height: 100vh;
         /* overflow-y: scroll; */
@@ -114,6 +116,15 @@ main {
     .list-group ul li a {
         line-height: 2.35rem;
     }
+
+    .sidebaritem span {
+        opacity: 1 !important;
+    }
+
+    .expand {
+        display: none;
+    }
+
     
 }
 
@@ -144,60 +155,6 @@ main {
     scrollbar-width: none;
 } */
 
-.sidebar-header {
-    display: flex;
-    border-bottom: 1px solid rgb(144, 163, 182);
-    color: white;
-    font-size: 125%;
-    justify-content: space-between;
-    margin: 1rem 1rem 0 1rem;
-    padding: .5rem 0rem;
-    cursor: pointer;
-    transition: .3s ease;
-}
-html.dark .sidebar-header {
-    color: rgb(190, 200, 207);
-    border-bottom: 1px solid rgb(84, 95, 105);
-}
-
-.sidebar-header i {
-    margin: 4px 2px 0;
-    padding: 3px 4px 0 !important;
-    border-radius: 50%;
-    background-color: var(--text-sec);
-    font-size: 10px;
-}
-.sidebar-header.expanded i {
-    padding: 2px 4px 0 !important;
-}
-
-
-@media only screen and (max-width: 707px) {
-    .sidebar-header i {
-        padding: 7px 8px 0 !important;
-    }
-    .sidebar-header.expanded i {
-        padding: 6px 8px 0 !important;
-    }
-}
-
-.sidebar-header span, .sidebar-header .fa {
-    text-decoration: none;
-    color: #eaeaea !important;
-}
-.sidebar-header:hover span, .sidebar-header:hover .fa {
-    color: var(--primary) !important;
-}
-html.dark .sidebar-header span, html.dark .sidebar-header .fa {
-    color: var(--dark-text) !important;
-}
-html.dark .sidebar-header:hover span, html.dark .sidebar-header:hover .fa {
-    color: var(--dark-link) !important;
-}
-html.dark .sidebar-header i {
-    background-color: var(--dark2);
-    transition: background-color .35s ease;
-}
 
 .sidebar ul.components {
     padding: 20px 0;
@@ -207,10 +164,6 @@ html.dark .sidebar-header i {
 .list-group ul p {
     color: #fff;
     padding: 10px;
-}
-
-.list-group ul a.expandable {
-    color: rgb(233, 233, 233);
 }
 
 .list-group ul li a {
@@ -278,6 +231,14 @@ html.dark .list-group ul li a {
     color: lightgray;
 }
 
+.sidebaritem a i {
+    position: relative;
+    top: 3px;
+    margin-right: .75rem;
+    font-size: 1.2rem;
+    line-height: 1rem;
+}
+
 .sidebaritem:hover {
     background-color: rgb(101, 117, 133);
 }
@@ -299,9 +260,72 @@ html.dark .sidebaritem.active a {
     color: var(--dark-link-h);
 }
 
-a[data-toggle="collapse"] {
-    position: relative;
+.expand {
+    position: absolute;
+    top: 60px;
+    left: 190px;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border: 1px solid rgba(47, 79, 79, 0.7);
+    border-radius: 50%;
+    color: darkslategray;
+    z-index: 4;
+    cursor: pointer;
+    transition: .3s ease;
 }
+.expand:hover {
+    background-color: #f9f9f9;
+}
+html.dark .expand {
+    background-color: var(--dark1);
+    color: var(--dark-text-sec);
+    border: 1px solid rgba(93, 94, 94, 0.7);
+}
+html.dark .expand:hover {
+    background-color: var(--dark2);
+}
+.expand svg {
+    position: absolute;
+    top: 1px;
+    right: 2px;
+}
+.sidebar.collapsed + .expand {
+    -webkit-transform:rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.sidebar.collapsed + .expand svg{
+    right: 1px;
+}
+
+.sidebar.collapsed, .background.collapsed {
+    width: 46px;
+    transition: .3s ease;
+}
+.sidebar.collapsed + .expand {
+    left: 36px;
+}
+/* .sidebar.collapsed ~ .main-content {
+    width: calc(100% - 46px);
+    left: 46px;
+} */
+/* .sidebar.collapsed .list-group ul li a {
+    width: 46px;
+    transition: 0.55s ease;
+} */
+.sidebar.collapsed span {
+    opacity: 0;
+    transition: 0.55s ease;
+}
+.list-group ul li a {
+    width: 200px;
+    overflow: hidden;
+    transition: 0.55s ease;
+}
+
 
 .dropdown-toggle::after {
     /* display: block;

@@ -18,7 +18,7 @@
   
         <div class="form-group">
           <label for="description">@lang('main.common.description')</label>
-          <input class="form-control" id="description" name="description" value="{{ $module->description }}"></input>
+          <input class="form-control" id="description" name="description" value="{{ $module->description }}">
         </div>
         
         
@@ -45,7 +45,7 @@
             @foreach ($module->problems as $con)
               <div class="card slate">
                 <span style="padding: .5rem 1rem;">{{$con->description}}</span>
-                <span class="borrar_condicion fa fa-trash"></span>
+                <i class="borrar_condicion ri-lg ri-delete-bin-7-line"></i>
                 <input type="hidden" name="modules[]" value="{{$con->id}}">
               </div>
             @endforeach
@@ -115,10 +115,10 @@
     val1.setAttribute("style", "padding: .5rem 1rem;");
     val1.innerHTML = $('#role option:selected').text();
 
-    var del = document.createElement('span');
+    var del = document.createElement('i');
     del.classList.add("borrar_condicion");
-    del.classList.add("fa");
-    del.classList.add("fa-trash");
+    del.classList.add("ri-lg");
+    del.classList.add("ri-delete-bin-7-line");
 
     var input = document.createElement('input');
     input.setAttribute("type", "hidden");

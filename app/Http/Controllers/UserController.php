@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
-class UsersController extends Controller
+class UserController extends Controller
 {
 
 	public function index()
@@ -26,28 +26,12 @@ class UsersController extends Controller
 			->orderBy('name')
 			->paginate(20);
 
-		//dd($usuarios);
-
 		foreach ($users as $user)
 		{
 			$user->counter = $user->created + $user->assigned;
 		}
 
 		return view('admin.users', compact('users'));
-	}
-
-	public function destroy($id)
-	{
-		$res = User::find($id);
-		
-		if ($res->delete())
-		{
-			return back()->with('message', __('main.common.deleted'));
-		}
-		else
-		{
-			return back()->with('error', __('main.common.error_deleting'));
-		}
 	}
 
 	public function create()
@@ -61,8 +45,6 @@ class UsersController extends Controller
 
 	public function store(Request $request)
 	{
-		//dd($request->all()); exit();
-
 		$request->validate([
 			'username' => 'required|max:30|unique:users,username',
 			'name' => 'required|max:150',
@@ -131,14 +113,19 @@ class UsersController extends Controller
 		}
 	}
 
-	/* public function habilitarUsuario($id)
+	public function destroy($id)
 	{
-		$user = User::find($id);
-		$user->activo = $user->activo? 0 : 1;
-		$user->save();
-
-		return response($user);
-	} */
+		$res = User::find($id);
+		
+		if ($res->delete())
+		{
+			return back()->with('message', __('main.common.deleted'));
+		}
+		else
+		{
+			return back()->with('error', __('main.common.error_deleting'));
+		}
+	}
 
 	public function profile($id)
 	{
@@ -151,7 +138,6 @@ class UsersController extends Controller
 
 	public function updateProfile(Request $request, $id)
 	{
-		//dd($request->all());
 
 		if (Auth::user()->id != $id) abort(403);
 
@@ -168,8 +154,6 @@ class UsersController extends Controller
 
 		if ($request->hasFile('avatar')	)
 		{
-			//dd($request->all());
-
 			if (Storage::exists('profile/'.$id.'.png'))
 				Storage::delete('profile/'.$id.'.png');
 
