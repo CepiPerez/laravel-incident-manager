@@ -17,7 +17,7 @@ class UserController extends Controller
 	public function index()
 	{
 		
-		$users = User::with(['client', 'role'])
+		$users = User::with(['role'])
 			->selectRaw('users.*, COALESCE(i.cnt,0) AS created, COALESCE(i2.cnt,0) AS assigned')
 			->joinSub('SELECT creator, count(creator) cnt FROM incidents GROUP BY creator', 'i',
 				'i.creator', '=', 'users.id', 'LEFT')

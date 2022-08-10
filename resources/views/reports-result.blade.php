@@ -45,7 +45,7 @@
             <th style="width:6rem;">INC</th>
             <th class="d-none d-xl-table-cell" style="width:120px;">Creado</th>
             @if (!isset($filters['client']))
-            <th class="d-none d-lg-table-cell" style="width:170px;">Cliente</th>
+            <th class="d-none d-lg-table-cell" style="width:220px;">Cliente</th>
             @endif
             <th class="th-auto">Titulo</th>
             <th style="width:110px;">Estado</th>
@@ -57,10 +57,10 @@
             <td>{{sprintf("%'.06d", $inc->id)}}</td>
             <td class="d-none d-xl-table-cell">{{date('d-m-Y ', strtotime($inc->created_at))}}</td>
             @if (!isset($filters['client']))
-            <td class="d-none d-lg-table-cell">{{$inc->client->description}}</td>
+            <td class="d-none d-lg-table-cell">{{$inc->client_desc}}</td>
             @endif
             <td class="td-truncated">{{$inc->title}}</td>
-            <td>{{ __('main.status.'.$inc->status->description) }}</td>
+            <td>{{ __('main.status.'.$inc->status_desc) }}</td>
           </tr>
           @endforeach
         </tbody>

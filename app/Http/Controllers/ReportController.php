@@ -45,7 +45,11 @@ class ReportController extends Controller
 			$request->client = Auth::user()->client->id;
 		}
 
-		$incidents = Incident::with(['client', 'status', 'progress'])
+		$incidents = Incident::selectRaw('incidents.id, incidents.created_at,
+			incidents.status_id, incidents.client_id, incidents.title,
+			clients.description as client_desc, incident_states.description as status_desc')
+			->leftJoin('incident_states', 'incident_states.id', '=', 'status_id')
+			->leftJoin('clients', 'clients.id', '=', 'client_id')
 			->whereBetween('created_at', [$start, $end]);
 
 		if ($request->group_id != 'all')

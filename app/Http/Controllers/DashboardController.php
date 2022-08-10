@@ -11,7 +11,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\WithStoredFilters;
 use App\Services\IncidentServices;
-
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -55,7 +55,7 @@ class DashboardController extends Controller
 
         $incidents = SlaStatusFilter::filter($incidents, $filter, $sla);
 
-        return $incidents->orderBy('id', 'desc')->paginate(15);
+        return $incidents->orderBy('id', 'desc')->with('client')->paginate(15);
 
     }
 
@@ -71,8 +71,13 @@ class DashboardController extends Controller
 
         $status = __('main.dashboard.'.$filter.'_title');
 
-        $groups = Auth::user()->type==1? Group::orderBy('description')->get() : [];
-        $users = Auth::user()->type==1? User::where('type', 1)->orderBy('name')->get() : [];
+        $groups = Auth::user()->type==1? 
+            DB::table('groups')->orderBy('description')->pluck('description', 'id')->toArray() : [];
+
+        $users = Auth::user()->type==1? 
+            DB::table('users')->orderBy('name')->pluck('name', 'id')->toArray(): [];
+
+
         $filters = $this->filters;
 
         return view('dashboard', compact('incidents', 'counter', 'status', 'sla', 'groups', 'users', 'filters'));

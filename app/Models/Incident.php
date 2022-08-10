@@ -31,14 +31,19 @@ class Incident extends Model
     {
         if(Auth::user()->type==1)
             return $this->hasMany(Progress::class)
-                ->selectRaw('progress.*, pr.description as pr_desc')
+                ->selectRaw('progress.*, pr.description as pr_desc, u.name as user_desc, u2.name as assigned_desc')
                 ->leftJoin('progress_types as pr', 'progress.progress_type_id', '=', 'pr.id')
+                ->leftJoin('users as u', 'progress.user_id', '=', 'u.id')
+                ->leftJoin('users as u2', 'progress.assigned_to', '=', 'u2.id')
                 ->orderBy('id', 'asc');
         else
             return $this->hasMany(Progress::class)
-                ->selectRaw('progress.*, pr.description as pr_desc, pr.creator_visible as visible')
+                ->selectRaw('progress.*, pr.description as pr_desc, pr.creator_visible as visible, u.name as user_desc, u2.name as assigned_desc')
                 ->leftJoin('progress_types as pr', 'progress.progress_type_id', '=', 'pr.id')
-                ->where('progress_type_id', '<', 100);
+                ->leftJoin('users as u', 'progress.user_id', '=', 'u.id')
+                ->leftJoin('users as u2', 'progress.assigned_to', '=', 'u2.id')
+                ->where('progress_type_id', '<', 100)
+                ->orderBy('id', 'asc');
     }
 
     public function progress_short()

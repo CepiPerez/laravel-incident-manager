@@ -145,17 +145,17 @@
                         <p class="text-strong m-0 mb-2">
                         @if ($value->progress_type_id==2)
                           @lang('main.incidents.assigned_to') {{ $groups[$value->assigned_group_to] ?? '' }}
-                          {{ $value->assigned_to ? ($value->assigned_group_to? '> '.$users->where('id', $value->assigned_to)->first()->name:'') : '' }}
+                          {{ $value->assigned_to ? ($value->assigned_group_to? '> '.$value->assigned_desc : '') : '' }}
                         @else
-                          {{ trans_fb('main.pro_types.'.$progress_types->where('id', $value->progress_type_id)->first()->description) }}
+                          {{ trans_fb('main.pro_types.'.$value->pr_desc) }}
                         @endif
                         </p>
                       </div>
                       <div class="col-6 p-0 text-right">
                         <span class="d-none d-md-inline text-secondary">
-                          <img src="{{ $users->where('id', $value->user_id)->first()->avatar }}" alt=""
+                          <img src="{{ get_user_avatar($value->user_id) }}" alt=""
                                class="profilepic small">
-                          {{ $users->where('id', $value->user_id)->first()->name }} 
+                          {{ $value->user_desc }} 
                         </span>
                         <span class="m-0 mb-2 ml-3 text-secondary">
                           <i class="ri-calendar-line pr-1 text-primary" style="vertical-align:middle;"></i>
@@ -268,7 +268,7 @@
               <label>@lang('main.incidents.table.creator')</label>
               <br>
               <div class="mt-0 mt-lg-0">
-                <img src="{{ $incident->creator_user->avatar }}" alt="" class="profilepic">
+                <img src="{{ get_user_avatar($incident->creator_user->id) }}" alt="" class="profilepic">
                 <span style="font-size: 1.1rem;">{{ $incident->creator_user->name }}</span>
               </div>
             </div>
@@ -298,9 +298,9 @@
             <div class="col-6 col-lg-12 form-group pt-2 pl-0">
               <label>@lang('main.incidents.assigned_group')</label>
               <br>
-              @if ($incident->assigned_group)
+              @if ($incident->group_id)
                 <img src="{{ asset('profile/group.png') }}" alt="" class="profilepic">
-                <span style="font-size: 1.1rem;">{{ $incident->assigned_group->description }}</span>
+                <span style="font-size: 1.1rem;">{{ $groups[$incident->group_id] }}</span>
               @else
                 <img src="{{ asset('profile/no_group.png') }}" alt="" class="profilepic">
                 <span style="font-size: 1.1rem;opacity:.7;">@lang('main.incidents.table.unassigned')</span>
@@ -311,7 +311,7 @@
               <label>@lang('main.incidents.assigned_user')</label>
               <br>
               @if ($incident->assigned_user)
-                  <img src="{{ $incident->assigned_user->avatar }}" alt="" class="profilepic">
+                  <img src="{{ get_user_avatar($incident->assigned_user->id) }}" alt="" class="profilepic">
                   <span style="font-size: 1.1rem;">{{ $incident->assigned_user->name }}</span>
               @else
                   <img src="{{ asset('profile/unassigned.png') }}" alt="" class="profilepic">
@@ -405,10 +405,7 @@
                     <div class="form-group" id="selectorAvance">
                     <label for="progress_type">@lang('main.pro_types.title')</label>
                     <select class="form-control" id="progress_type" name="progress_type">
-                        @foreach (($incident->status_id==10?
-                            $progress_types->whereIn('id', [6, 20]) :
-                            $progress_types->whereNotIn('id', [6, 30, 100]))
-                          as $pt)
+                        @foreach ($progress_types as $pt)
                           <option value="{{$pt->id}}">{{ trans_fb('main.pro_types.'.$pt->description) }}</option>
                         @endforeach
                     </select>

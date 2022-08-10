@@ -106,8 +106,8 @@
                     <td class="d-none d-lg-table-cell td-truncated">
                         <a href="{{ route('incidents.edit', $value->id) }}">
                         @if ($value->status_id!=0 && $value->assigned)
-                            <img src="{{ $value->assigned_user->avatar }}" alt="">
-                            <span style="position:relative;top:1px;">{{ $value->assigned_user->name }}</span>
+                            <img src="{{ get_user_avatar($value->assigned) }}" alt="">
+                            <span style="position:relative;top:1px;">{{ $value->assigned_name }}</span>
                         @else
                             <img src="{{ asset('profile/unassigned.png') }}" alt="">
                             <span class="text-secondary">@lang('main.incidents.table.unassigned')</span>
@@ -180,9 +180,8 @@
                             <select class="form-control" id="client_id" name="client_id">
                                 <option value="all">@lang('main.incidents.filters.all_clients')</option>
                                 @if ($clients)
-                                    @foreach ($clients as $cli)
-                                    <option value="{{$cli['id']}}" @selected($filters['client_id']==$cli['id'])>
-                                        {{$cli['description']}}</option>
+                                    @foreach ($clients as $key => $val)
+                                    <option value="{{$key}}" @selected($filters['client_id']==$key)>{{$val}}</option>
                                     @endforeach
                                 @endif
                             </select>
@@ -192,7 +191,7 @@
                             <select class="form-control" id="assigned" name="assigned">
                                 <option value="all">@lang('main.incidents.filters.all_users')</option>
                                 @foreach ($users as $key => $val)
-                                <option value="{{$key}}" @selected($filters['assigned']==$key)>{{$val}}</option>
+                                    <option value="{{$key}}" @selected($filters['assigned']==$key)>{{$val}}</option>
                                 @endforeach
                             </select>
                         </div>  
@@ -213,9 +212,9 @@
                             <select id="area_id" name="area_id" class="form-control">
                                 <option value="all">@lang('main.incidents.filters.all_areas')</option>
                                 @if ($areas)
-                                @foreach ($areas as $mod)
-                                <option value="{{$mod->id}}" @selected($filters['area_id']==$mod->id)>
-                                    {{$mod->description}}</option>
+                                @foreach ($areas as $key => $val)
+                                <option value="{{$key}}" @selected($filters['area_id']==$key)>
+                                    {{$val}}</option>
                                 @endforeach
                                 @endif
                             </select>
@@ -228,9 +227,9 @@
                             <select id="module_id" name="module_id" class="form-control">
                                 <option value="all">@lang('main.incidents.filters.all_modules')</option>
                                 @if ($modules)
-                                @foreach ($modules as $mod)
-                                <option value="{{$mod->id}}" @selected($filters['module_id']==$mod->id)>
-                                    {{$mod->description}}</option>
+                                @foreach ($modules as $key => $val)
+                                <option value="{{$key}}" @selected($filters['module_id']==$key)>
+                                    {{$val}}</option>
                                 @endforeach
                                 @endif
                             </select>
@@ -240,9 +239,9 @@
                             <select id="problem_id" name="problem_id" class="form-control">
                                 <option value="all">@lang('main.incidents.filters.all_problems')</option>
                                 @if ($problems)
-                                @foreach ($problems as $ti)
-                                <option value="{{$ti->id}}" @selected($filters['problem_id']==$ti->id)>
-                                    {{$ti->description}}</option>
+                                @foreach ($problems as $key => $val)
+                                <option value="{{$key}}" @selected($filters['problem_id']==$key)>
+                                    {{$val}}</option>
                                 @endforeach
                                 @endif
                             </select>

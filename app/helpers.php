@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 
@@ -68,6 +69,25 @@ if (! function_exists('get_icon_svg'))
                 $val = 'pdf';
 
         return asset("assets/icons/$val.svg");
+
+    }
+
+}
+
+if (! function_exists('get_user_avatar')) 
+{
+    function get_user_avatar($value)
+    {
+        if (Storage::exists('profile/'. $value.'.png'))
+            return asset('profile/'. $value.'.png');
+            
+        if (Storage::exists('profile/'. $value.'.jpg'))
+            return asset('profile/'. $value.'.jpg');
+
+        if (Storage::exists('profile/'. $value.'.webp'))
+            return asset('profile/'. $value.'.webp');
+        
+        return asset('profile/default.png');
 
     }
 

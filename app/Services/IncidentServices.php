@@ -117,12 +117,15 @@ class IncidentServices
     {
 		//$filters = $this->getMixedFilters($request_filters);
 
-        $incidents = Incident::with(['creator_user', 'assigned_user'])
-            ->selectRaw('incidents.*, clients.description as client_desc, 
+        $incidents = Incident::selectRaw('incidents.id, incidents.client_id, incidents.title, 
+            incidents.description, incidents.group_id, incidents.creator, 
+            incidents.assigned, incidents.status_id, incidents.priority,
+            incidents.created_at, clients.description as client_desc, 
             incident_states.description as status_desc, priorities.id as pid, 
-            priorities.description as pdesc')
+            priorities.description as pdesc, users.name as assigned_name')
             ->leftJoin('incident_states', 'incident_states.id', '=', 'status_id')
             ->leftJoin('clients', 'clients.id', '=', 'client_id')
+            ->leftJoin('users', 'users.id', '=', 'assigned')
             ->leftJoin('priorities', function ($join) {
                 $join->on('incidents.priority', '>=', 'priorities.min');
                 $join->on('incidents.priority', '<=', 'priorities.max');

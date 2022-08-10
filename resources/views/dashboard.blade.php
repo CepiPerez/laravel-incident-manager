@@ -151,9 +151,9 @@
               </td>
               <td class="d-none d-md-table-cell" class="td-truncated">
                 <a href="{{ route('incidents.edit', $incident->id) }}">
-                  @if ($incident->status_id!=0 && $incident->assigned_user)
-                    <img src="{{ $incident->assigned_user->avatar }}" alt="">
-                    {{ $incident->assigned_user->name }}
+                  @if ($incident->status_id!=0 && $incident->assigned)
+                    <img src="{{ get_user_avatar($incident->assigned) }}" alt="">
+                    {{ $incident->assigned_name }}
                   @else
                     <img src="{{ asset('profile/unassigned.png') }}" alt="">
                     <span style="color:gray;">@lang('main.incidents.table.unassigned')</span>
@@ -243,8 +243,8 @@
                     <label for="group_id">@lang('main.incidents.filters.group')</label>
                     <select class="form-control" id="group_id" name="group_id">
                       <option value="all">@lang('main.incidents.filters.all_groups')</option>
-                      @foreach ($groups as $group)
-                      <option value="{{$group->id}}" @selected($filters['group_id']==$group->id)>{{$group->description}}</option>
+                      @foreach ($groups as $key => $val)
+                      <option value="{{$key}}" @selected($filters['group_id']==$key)>{{$val}}</option>
                       @endforeach
                     </select>
                   </div>
@@ -253,8 +253,8 @@
                     <label for="assigned">@lang('main.incidents.filters.assigned')</label>
                     <select class="form-control" id="assigned" name="assigned">
                       <option value="all">@lang('main.incidents.filters.all_users')</option>
-                      @foreach ($users as $user)
-                      <option value="{{$user->id}}" @selected($filters['assigned']==$user->id)>{{$user->name}}</option>
+                      @foreach ($users as $key => $val)
+                      <option value="{{$key}}" @selected($filters['assigned']==$key)>{{$val}}</option>
                       @endforeach
                     </select>
                   </div>

@@ -13,6 +13,7 @@
         "symfony/filesystem": "^6.1"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.7",
         "fakerphp/faker": "^1.9.1",
         "laravel/breeze": "^1.11",
         "laravel/pint": "^1.0",

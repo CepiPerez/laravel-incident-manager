@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('incident_states', function (Blueprint $table) {
-            $table->bigInteger('id');
+            $table->unsignedBigInteger('id')->primary();
             $table->text('description');
         });
     }

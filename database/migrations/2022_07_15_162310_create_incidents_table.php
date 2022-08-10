@@ -15,16 +15,19 @@ return new class extends Migration
     {
         Schema::create('incidents', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('client_id');
-            $table->bigInteger('area_id');
-            $table->bigInteger('module_id');
-            $table->bigInteger('problem_id');
             $table->text('title');
             $table->longText('description');
-            $table->bigInteger('creator');
-            $table->bigInteger('assigned')->nullable();
-            $table->bigInteger('group_id')->nullable();
-            $table->bigInteger('status_id');
+            $table->foreignId('client_id')->constrained();
+            $table->foreignId('area_id')->constrained();
+            $table->foreignId('module_id')->constrained();
+            $table->foreignId('problem_id')->constrained();
+            $table->unsignedBigInteger('creator')->nullable();
+            $table->foreign('creator')->references('id')->on('users');
+            $table->unsignedBigInteger('assigned')->nullable();
+            $table->foreign('assigned')->references('id')->on('users');
+            $table->foreignId('group_id')->nullable()->constrained();
+            $table->unsignedBigInteger('status_id');
+            $table->foreign('status_id')->references('id')->on('incident_states');
             $table->integer('priority');
             $table->integer('sla');
             $table->timestamps();
